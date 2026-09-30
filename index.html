@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050505">
+  <title>Lector K-Line — Freelander 1 MY99</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050505;
+      --ink: #f3f3f3;
+      --muted: #8d8d8d;
+      --dim: #5a5a5a;
+      --line: rgba(255, 255, 255, 0.14);
+      --line-strong: rgba(255, 255, 255, 0.28);
+      --pad: clamp(1.25rem, 4vw, 4.5rem);
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Manrope, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.55;
+      color-scheme: dark;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: #fff; }
+    :focus-visible {
+      outline: 1px solid #fff;
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      background: #fff;
+      color: #000;
+      padding: 0.5rem 0.8rem;
+      z-index: 20;
+    }
+    .skip:focus { top: 1rem; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1rem 1.5rem;
+      align-items: center;
+      padding: 1.15rem var(--pad);
+      background: rgba(5, 5, 5, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid transparent;
+    }
+
+    .mark {
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      font-weight: 500;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.55rem 1.15rem;
+    }
+    nav a {
+      flex: 0 0 auto;
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    nav a:hover { color: var(--ink); }
+
+    .lang {
+      justify-self: end;
+      font-size: 0.68rem;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 0.28rem 0.7rem;
+    }
+
+    main { padding-bottom: 5rem; }
+
+    .wrap {
+      width: min(var(--max), calc(100% - (var(--pad) * 2)));
+      margin-inline: auto;
+    }
+
+    .hero {
+      padding: clamp(2.5rem, 7vw, 5.5rem) 0 0;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1.5rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-weight: 400;
+      font-size: clamp(2.7rem, 7vw, 5.6rem);
+      letter-spacing: -0.045em;
+      line-height: 0.92;
+    }
+
+    .model {
+      margin: 0;
+      font-weight: 400;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .eyebrow {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      margin-top: 2.2rem;
+      padding-bottom: 0.8rem;
+    }
+    .eyebrow span {
+      font-size: 0.66rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .eyebrow span:nth-child(2) { text-align: center; }
+    .eyebrow span:nth-child(3) { text-align: right; }
+
+    .stage {
+      margin-top: 0.4rem;
+      padding-bottom: 1.6rem;
+      border-top: 1px solid var(--line);
+      background:
+        radial-gradient(ellipse at 50% 42%, rgba(255,255,255,0.05), transparent 58%);
+    }
+    .stage svg { display: block; width: 100%; height: auto; }
+    .stage-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 0.8rem;
+      font-size: 0.66rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .stage-note {
+      margin: 0.85rem 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .triad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(1.5rem, 3vw, 3rem);
+      padding: clamp(2.5rem, 5vw, 4rem) 0;
+      border-top: 1px solid var(--line);
+    }
+    .triad h2 {
+      margin: 0 0 0.8rem;
+      font-size: 1.05rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+    .triad p, .prose p, .note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 400;
+      max-width: 42ch;
+    }
+
+    .specs {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.8fr) 1.4fr;
+      gap: 2rem 3rem;
+      padding: clamp(2rem, 5vw, 4rem) 0 clamp(3rem, 6vw, 5rem);
+      border-top: 1px solid var(--line);
+    }
+    .specs .who {
+      font-size: clamp(1.6rem, 3vw, 2.3rem);
+      font-weight: 400;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin: 0;
+    }
+    .specs .who span {
+      display: block;
+      color: var(--muted);
+    }
+    .figures { display: grid; gap: 0.15rem; }
+    .figure {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.25rem 1.5rem;
+      align-items: end;
+      border-top: 1px solid var(--line);
+      padding: 0.85rem 0 0.35rem;
+    }
+    .figure b {
+      font-weight: 400;
+      font-size: clamp(3.4rem, 8vw, 6.4rem);
+      letter-spacing: -0.06em;
+      line-height: 0.85;
+    }
+    .figure em {
+      font-style: normal;
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding-bottom: 0.45rem;
+    }
+
+    .lead {
+      padding: 0 0 clamp(3rem, 6vw, 5rem);
+      max-width: 78ch;
+    }
+    .lead p {
+      margin: 0;
+      font-size: clamp(1.15rem, 2vw, 1.45rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.45;
+    }
+
+    section.block {
+      padding: clamp(2.8rem, 6vw, 5rem) 0;
+      border-top: 1px solid var(--line);
+      scroll-margin-top: 5.5rem;
+    }
+    .kicker {
+      margin: 0 0 1.4rem;
+      font-size: 0.66rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    h3 {
+      margin: 2.2rem 0 0.8rem;
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+      font-weight: 400;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+    h3:first-of-type { margin-top: 0; }
+    .prose p + p { margin-top: 0.9rem; }
+    .prose ul, .prose ol {
+      margin: 0.8rem 0 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+    }
+    .prose li {
+      padding: 0.55rem 0;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 2.2rem 1fr;
+      gap: 0.6rem;
+    }
+    .prose li span {
+      color: var(--dim);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      padding-top: 0.2rem;
+    }
+
+    .sheet { margin-top: 1.6rem; }
+    .row {
+      display: grid;
+      grid-template-columns: minmax(9rem, 16rem) 1fr;
+      gap: 1rem 2rem;
+      padding: 0.85rem 0;
+      border-top: 1px solid var(--line);
+      align-items: baseline;
+    }
+    .row span {
+      color: var(--dim);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .row b, .row code {
+      font-weight: 400;
+    }
+    code, pre, .mono {
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.86em;
+    }
+    p code, li code, .row code {
+      font-size: 0.84em;
+      color: #e7e7e7;
+    }
+
+    pre {
+      margin: 1.2rem 0 0;
+      padding: 1.1rem 1.2rem;
+      overflow-x: auto;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: #d7d7d7;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      white-space: pre;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.4rem;
+    }
+    .panel {
+      min-height: 220px;
+      background: #0a0a0a;
+      border: 1px solid var(--line);
+      padding: 1.1rem 1.15rem 1.3rem;
+    }
+    .panel .kicker { margin-bottom: 0.8rem; }
+    .panel pre {
+      border: 0;
+      margin: 0;
+      padding: 0;
+      font-size: 0.75rem;
+    }
+
+    .socket {
+      margin-top: 1.5rem;
+      width: min(100%, 520px);
+      background: #0a0a0a;
+      border: 1px solid var(--line);
+      padding: 1.3rem 1.2rem 1.1rem;
+      clip-path: polygon(0 0, 100% 0, 94% 100%, 6% 100%);
+    }
+    .socket-row {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 0.45rem;
+    }
+    .socket-row + .socket-row { margin-top: 0.7rem; }
+    .pin {
+      aspect-ratio: 1;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 0.68rem;
+      color: var(--muted);
+      position: relative;
+    }
+    .pin strong {
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .pin.masa { border-color: #fff; color: #fff; }
+    .pin.kline { background: #f3f3f3; color: #050505; border-color: #f3f3f3; }
+    .pin.kline strong { color: #050505; }
+    .pin.bat { border-style: dashed; }
+    .socket-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.4rem;
+      margin-top: 1.8rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .files {
+      display: grid;
+      gap: 0;
+      margin-top: 1.2rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 1.4rem var(--pad) 2rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--dim);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 860px) {
+      header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .mark { margin-right: auto; }
+      nav {
+        order: 3;
+        width: 100%;
+        justify-content: flex-start;
+        padding-top: 0.35rem;
+      }
+      .hero-top { align-items: flex-start; }
+      .triad, .specs, .split { grid-template-columns: 1fr; }
+      .eyebrow span:nth-child(2) { text-align: center; }
+      .row { grid-template-columns: 1fr; gap: 0.25rem; }
+      .socket { clip-path: none; }
+      footer { flex-direction: column; }
+    }
+
+    @media (max-width: 420px) {
+      h1 { font-size: 2.35rem; }
+      .model { font-size: 1.7rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <header>
+    <a class="mark" href="#contenido">Roverta</a>
+    <nav aria-label="Secciones">
+      <a href="#vehiculo">Vehículo</a>
+      <a href="#sintoma">Síntoma</a>
+      <a href="#bus">Bus</a>
+      <a href="#placas">Placas</a>
+      <a href="#circuito">Circuito</a>
+      <a href="#firmware">Firmware</a>
+      <a href="#campo">Campo</a>
+      <a href="#limites">Límites</a>
+    </nav>
+    <span class="lang">ES</span>
+  </header>
+
+  <main id="contenido">
+    <section class="hero wrap">
+      <div class="hero-top">
+        <h1>Lector K-Line</h1>
+        <p class="model">27VT</p>
+      </div>
+      <div class="eyebrow" aria-hidden="true">
+        <span>Freelander 1</span>
+        <span>MY99</span>
+        <span>Solo lectura</span>
+      </div>
+      <div class="stage" role="img" aria-label="Trazo de la K-Line: un pulso lento de 5 baudios y después la ráfaga de la sesión.">
+        <svg viewBox="0 0 1200 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 250 H220 V170 H300 V250 H380 V170 H460 V250 H700 V120 H724 V250 H748 V120 H772 V250 H796 V120 H820 V250 H844 V120 H868 V250 H1160" stroke="#f3f3f3" stroke-width="1.25"/>
+        </svg>
+        <div class="stage-meta">
+          <span>5 baudios</span>
+          <span>Sesión</span>
+        </div>
+        <p class="stage-note">Pin 7 · ISO 9141 · ESP32 · Raspberry Pi Zero W</p>
+      </div>
+    </section>
+
+    <section class="wrap triad">
+      <article>
+        <h2>El botón llega</h2>
+        <p>Bosch ve cambiar la entrada del portón. El vidrio y el pestillo no se mueven. La orden se corta dentro de la CCU.</p>
+      </article>
+      <article>
+        <h2>Country en cero</h2>
+        <p>En el SM024 v1.22, Country = 0 enciende el Transit Mode. Argentina es el 57. El 1, aunque diga Transit, no es el destino.</p>
+      </article>
+      <article>
+        <h2>Pin siete</h2>
+        <p>La 27VT de 1999 habla por K-Line, no por CAN. El lector despierta el módulo y anota la respuesta. No escribe configuración.</p>
+      </article>
+    </section>
+
+    <section class="wrap specs" aria-label="Cifras del lector">
+      <p class="who">Freelander 1<span>Lucas 27VT</span></p>
+      <div class="figures">
+        <div class="figure"><b>5</b><em>baudios para despertar la ECU</em></div>
+        <div class="figure"><b>7</b><em>pin de la K-Line en el zócalo</em></div>
+        <div class="figure"><b>57</b><em>código de país Argentina</em></div>
+      </div>
+    </section>
+
+    <section class="wrap lead">
+      <p>El ESP32 habla con la camioneta por el conector OBD. La Raspberry Pi Zero W registra la sesión. El firmware abre la comunicación, mide la velocidad y publica los bytes. Country, el código EDC y el EKA quedan sin tocar hasta que una sesión real entregue el comando de lectura.</p>
+    </section>
+
+    <section class="block" id="archivos">
+      <div class="wrap prose">
+        <p class="kicker">Archivos</p>
+        <h3>Qué hay en el repositorio</h3>
+        <div class="sheet">
+          <div class="row"><span>Firmware</span><b><code>firmware/esp32_kline/esp32_kline.ino</code></b></div>
+          <div class="row"><span>Registro</span><b><code>host/kline_log.py</code></b></div>
+          <div class="row"><span>Logs</span><b><code>host/logs/kline-AAAAMMDD-HHMMSS.log</code></b></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="vehiculo">
+      <div class="wrap prose">
+        <p class="kicker">Vehículo</p>
+        <h3>SALLNABB8XA690228</h3>
+        <div class="sheet">
+          <div class="row"><span>Marca / planta</span><b>Land Rover, Solihull</b></div>
+          <div class="row"><span>Modelo</span><b>Freelander 1, 5 puertas</b></div>
+          <div class="row"><span>Año modelo</span><b>1999, código VIN X</b></div>
+          <div class="row"><span>Motor</span><b>Rover L-Series 2.0 XEDi, turbodiésel</b></div>
+          <div class="row"><span>Caja</span><b>Manual 5 velocidades, volante a la izquierda</b></div>
+          <div class="row"><span>Carrocería</span><b>Lucas 27VT, la CCU</b></div>
+          <div class="row"><span>Coding Index</span><b>1 esperado. EKA presente. Inmovilizador dentro de la CCU</b></div>
+          <div class="row"><span>ECU de motor</span><b>EDC del L-Series. Se reconoce con la CCU por el campo EDC code</b></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="sintoma">
+      <div class="wrap prose">
+        <p class="kicker">Síntoma</p>
+        <h3>La entrada vive. La salida no.</h3>
+        <p>El botón del portón llega a la CCU: en el escáner Bosch la entrada cambia de estado. El vidrio y el pestillo no se mueven.</p>
+        <p>Ese patrón coincide con el Transit Mode del manual de taller. Con la CCU en ese modo quedan desactivados el receptor de radio de los mandos, el pestillo del portón, la luneta trasera, el cierre centralizado y las luces interiores.</p>
+        <p>La CCU sigue despierta e informa el botón. Con el contacto en posición II, el zumbador interno suena para avisar que el modo sigue activo.</p>
+        <p>En Coding Index 1 hay además un campo separado, Transport mode. Se lee junto con Country. La salida de fábrica, con TestBook, T4, PScan o SM024, pasa Country de 0 a 57 y deja el resto del bloque como estaba.</p>
+        <p>Los marcadores de temperatura y combustible no pasan por la 27VT. Van del sensor al tablero. Este dispositivo no los corrige.</p>
+      </div>
+    </section>
+
+    <section class="block" id="bus">
+      <div class="wrap prose">
+        <p class="kicker">Bus</p>
+        <h3>K-Line en el pin 7</h3>
+        <p>La 27VT de este año modelo se alcanza por K-Line ISO 9141. No hay sesión de diagnóstico de la CCU por CAN. Un transceptor CAN, MCP2515 u otro, no despierta esta unidad.</p>
+        <p>El mismo pin 7 lo comparten varios módulos. Cada uno responde a su dirección de despertar. Una dirección que no corresponde produce silencio, sin escribir nada.</p>
+        <div class="sheet">
+          <div class="row"><span>Capa física</span><b>Un hilo. 0 V dominante, 12 V en reposo</b></div>
+          <div class="row"><span>Conector</span><b>SAE J1962, zócalo del vehículo</b></div>
+          <div class="row"><span>Pin de datos</span><b>7</b></div>
+          <div class="row"><span>Masa</span><b>Pin 4, masa de chasis. El pin 5 es masa de señal desde el año modelo 2002.5</b></div>
+          <div class="row"><span>Pin 16</span><b>Batería permanente. No alimenta el ESP32</b></div>
+          <div class="row"><span>Pin 13</span><b>Bus DS2 en el manual posterior. En este MY99 el inmovilizador está dentro de la 27VT</b></div>
+          <div class="row"><span>Inicialización</span><b>Lenta, 5 baudios, y después la velocidad de trabajo</b></div>
+          <div class="row"><span>Formato</span><b>8N1, mientras una captura real no muestre otra cosa</b></div>
+          <div class="row"><span>Velocidad</span><b>9600 o 10400. Ninguna está medida todavía en esta camioneta</b></div>
+          <div class="row"><span>Dirección</span><b>Sin confirmar. Candidatas: 0x1C, 0x10, 0x17. 0x33 es la genérica ISO 9141</b></div>
+          <div class="row"><span>Ajustes</span><b>Checksum y comandos sin confirmar. PScan y SM024 los tienen en software cerrado</b></div>
+        </div>
+        <h3>La dirección 9D no se envía</h3>
+        <p>En el Lucas 5AS, un módulo de la misma época, 0x9D abre el modo de memoria. El firmware rechaza ese byte. No hay evidencia publicada de que en la 27VT haga lo mismo, y un disparo de ese tipo se acerca al área donde vive el código EDC.</p>
+      </div>
+    </section>
+
+    <section class="block" id="placas">
+      <div class="wrap prose">
+        <p class="kicker">Placas</p>
+        <h3>El tiempo lo cuenta el ESP32</h3>
+        <div class="sheet">
+          <div class="row"><span>ESP32</span><b>Bit-bang de los 5 baudios y de la respuesta a unos 10 kbaud. USB serie a 115200</b></div>
+          <div class="row"><span>Pi Zero W</span><b>Computadora de campo. Corre kline_log.py y guarda el log. Puede alimentar el ESP32 por USB si la corriente alcanza</b></div>
+          <div class="row"><span>ESP8266</span><b>Queda afuera. El bit-bang a 10400 no sostiene la ventana de tiempos</b></div>
+          <div class="row"><span>Arduino Uno</span><b>Queda afuera. Su único UART de hardware es el del USB</b></div>
+        </div>
+        <p style="margin-top:1rem">La Pi no puede cumplir la ventana de 25 a 50 ms del reconocimiento ISO si el diálogo viaja por Python. El apretón ocurre dentro del ESP32.</p>
+        <div class="sheet">
+          <div class="row"><span>GPIO 25</span><b>TX hacia el transistor o el L9637. No es pin de arranque</b></div>
+          <div class="row"><span>GPIO 26</span><b>RX desde el divisor. Entrada</b></div>
+          <div class="row"><span>UART0</span><b>USB hacia la Pi o la PC. 115200 8N1</b></div>
+        </div>
+        <p style="margin-top:1rem">Durante el arranque, el GPIO 25 queda en alta impedancia. La resistencia de 100 kΩ entre base y masa mantiene el NPN apagado hasta que el sketch pone la línea en reposo.</p>
+      </div>
+    </section>
+
+    <section class="block" id="circuito">
+      <div class="wrap prose">
+        <p class="kicker">Interfaz</p>
+        <h3>12 V no entran al GPIO</h3>
+        <p>El GPIO del ESP32 es de 3,3 V. No tolera 5 V ni 12 V. La K-Line en reposo está a tensión de batería, entre unos 11 V y 14,4 V con el alternador. El pin 7 entra solo por este circuito.</p>
+        <p>Transistor 2N2222, BC547 o NPN equivalente. Emisor a masa. El firmware arranca en <code>IFACE NPN</code>: GPIO en alto satura el transistor y pone la K-Line a masa. GPIO en bajo corta el transistor y la línea vuelve a 12 V por el pull-up que ya tienen las ECU.</p>
+        <pre>OBD pin 4  ------------------------- GND ESP32
+OBD pin 7  ----+---- 150 kΩ ---- GPIO26 (RX)
+               |                    |
+               |                  zener 3,3 V
+               |                  cátodo en GPIO26, ánodo a GND
+               |                    |
+               |                  47 kΩ
+               |                    |
+               |                   GND
+               |
+               +---- 1 kΩ ---- colector NPN
+
+GPIO25 ---- 1 kΩ ---- base NPN
+base   ---- 100 kΩ --- GND
+emisor ---------------- GND</pre>
+        <div class="sheet">
+          <div class="row"><span>1 kΩ de base</span><b>Limita la corriente de base. Con 3,3 V y Vbe ≈ 0,7 V, Ib ≈ 2,6 mA</b></div>
+          <div class="row"><span>100 kΩ</span><b>Apaga el NPN mientras el ESP32 arranca. Evita clavar la K-Line al conectar el USB</b></div>
+          <div class="row"><span>1 kΩ de colector</span><b>Limita la corriente al dominar la línea. Protege el transistor y los drivers de las ECU</b></div>
+          <div class="row"><span>150 kΩ + 47 kΩ</span><b>Divisor de lectura. A 14,4 V, sin zener, el nodo queda cerca de 3,4 V</b></div>
+          <div class="row"><span>Zener 3,3 V</span><b>Techo del GPIO 26. Con 14,4 V circulan unos 70 µA por los 150 kΩ</b></div>
+        </div>
+        <p style="margin-top:1rem">Sin zener, 14 V en ese divisor se acerca al máximo del ESP32. El zener forma parte del circuito. El ESP32 se alimenta por USB, desde la Pi o un power bank. El pin 16 no se conecta a 5 V, a 3,3 V ni a un GPIO. La masa es común: pin 4, GND del ESP32 y GND de la Pi.</p>
+        <h3>L9637, si aparece el integrado</h3>
+        <p><code>IFACE L9637</code> trata la interfaz como no inversora: GPIO en alto deja la K-Line suelta. El VCC lógico del L9637 va a 3,3 V. Con VCC a 5 V, la pata RX entrega 5 V y daña el ESP32. La pata de batería del integrado, si se usa, sale del pin 16 por la red de su hoja de datos, nunca hacia un GPIO.</p>
+
+        <h3>Zócalo, visto de frente</h3>
+        <p>Fila ancha arriba, pines 1 a 8 de izquierda a derecha. Fila angosta abajo, pines 9 a 16.</p>
+        <div class="socket" role="img" aria-label="Zócalo de 16 pines. El 4 es masa, el 7 es K-Line, el 16 es batería.">
+          <div class="socket-row">
+            <div class="pin">1</div>
+            <div class="pin">2</div>
+            <div class="pin">3</div>
+            <div class="pin masa"><strong>4</strong></div>
+            <div class="pin">5</div>
+            <div class="pin">6</div>
+            <div class="pin kline"><strong>7</strong></div>
+            <div class="pin">8</div>
+          </div>
+          <div class="socket-row">
+            <div class="pin">9</div>
+            <div class="pin">10</div>
+            <div class="pin">11</div>
+            <div class="pin">12</div>
+            <div class="pin">13</div>
+            <div class="pin">14</div>
+            <div class="pin">15</div>
+            <div class="pin bat"><strong>16</strong></div>
+          </div>
+        </div>
+        <div class="socket-legend">
+          <span>4 — masa, único retorno</span>
+          <span>7 — K-Line, única señal</span>
+          <span>16 — batería, esquina inferior derecha, sin usar</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="firmware">
+      <div class="wrap prose">
+        <p class="kicker">Firmware</p>
+        <h3>115200 en el monitor</h3>
+        <p>El sketch se carga con el IDE de Arduino, placa ESP32 Dev Module. No usa WiFi ni Bluetooth: el bit-bang no comparte el tiempo con la radio. Se flashea desde la PC. La Pi Zero no es un entorno cómodo para compilar el core de ESP32.</p>
+        <div class="sheet">
+          <div class="row"><span>HELP</span><b>Lista de comandos. También responde a ?</b></div>
+          <div class="row"><span>IFACE NPN</span><b>Transistor inversor. Es el valor de arranque</b></div>
+          <div class="row"><span>IFACE L9637</span><b>Transceptor no inversor, VCC a 3,3 V</b></div>
+          <div class="row"><span>LEVELS</span><b>Durante 0,5 s cuenta cuántas muestras del GPIO 26 están en alto</b></div>
+          <div class="row"><span>CHECK</span><b>LEVELS y un pulso dominante de 3 ms. Comprueba que el transistor baja la línea y la suelta</b></div>
+          <div class="row"><span>INIT HH</span><b>Inicialización lenta a la dirección hexadecimal HH</b></div>
+          <div class="row"><span>SCAN</span><b>INIT de 1C, 10, 17 y 33, con pausa entre ellas</b></div>
+          <div class="row"><span>INIT 9D</span><b>Rechazado. Responde ADDR_9D_NO_ENVIADA</b></div>
+        </div>
+        <p style="margin-top:1rem">SCAN no envía servicios de lectura de memoria, no acciona salidas y no escribe Country, EKA ni EDC.</p>
+
+        <h3>Secuencia de cada INIT</h3>
+        <ol>
+          <li><span>01</span>Línea en reposo durante 2 s, para que un intento anterior termine.</li>
+          <li><span>02</span>Dirección a 5 baudios: start dominante, 8 bits con el menos significativo primero, stop en reposo. Cada bit dura 200 ms. El byte dura 2 s.</li>
+          <li><span>03</span>Espera como máximo 350 ms el flanco de bajada del byte de sincronismo.</li>
+          <li><span>04</span>Mide el ancho de ese primer bit bajo. Acepta entre 70 µs y 160 µs. 9600 baudios son unos 104 µs. 10400 baudios son unos 96 µs.</li>
+          <li><span>05</span>Lee el byte de sincronismo y dos keywords con ese ancho de bit.</li>
+          <li><span>06</span>Espera 30 ms y devuelve el complemento a uno del segundo keyword. En ISO 9141 esa ventana va de 25 ms a 50 ms. Sin este byte la ECU corta la sesión. No es una escritura.</li>
+          <li><span>07</span>Lee el byte siguiente. En una sesión válida es el complemento de la dirección enviada.</li>
+          <li><span>08</span>Suelta la línea y publica el resultado por USB. No transmite nada más.</li>
+        </ol>
+        <p style="margin-top:1rem">Entre una dirección y la siguiente de SCAN hay 3 s, además de los 2 s de reposo del intento nuevo.</p>
+
+        <h3>Cómo se lee el texto</h3>
+        <div class="sheet">
+          <div class="row"><span>KLINE_27VT_LISTO</span><b>El sketch arrancó y la línea está en reposo</b></div>
+          <div class="row"><span>RX_HIGH n/20</span><b>Muestras en alto de LEVELS</b></div>
+          <div class="row"><span>KLINE_EN_REPOSO</span><b>17 o más muestras en alto. La K-Line está en 12 V y el divisor la ve</b></div>
+          <div class="row"><span>KLINE_EN_BAJO</span><b>3 o menos muestras en alto. Línea a masa, transistor invertido o sin pull-up</b></div>
+          <div class="row"><span>KLINE_INESTABLE</span><b>Lectura a mitad de camino. Masa floja o contacto a medias</b></div>
+          <div class="row"><span>PULSO OK</span><b>El pulso de 3 ms se vio en el GPIO 26</b></div>
+          <div class="row"><span>PULSO FALLO</span><b>El transistor no mueve la línea que el divisor está leyendo</b></div>
+          <div class="row"><span>SILENCIO</span><b>Nadie respondió en 350 ms</b></div>
+          <div class="row"><span>KLINE_QUEDA_EN_BAJO</span><b>Apareció un flanco y la línea no volvió a reposo</b></div>
+          <div class="row"><span>ANCHO_RARO</span><b>Pulso fuera de 70–160 µs. Detrás va el ancho medido</b></div>
+          <div class="row"><span>SYNC 55</span><b>Byte de sincronismo ISO correcto</b></div>
+          <div class="row"><span>RX_INVERTIDA</span><b>El sincronismo llegó como AA, complemento de 55. El divisor o IFACE está al revés</b></div>
+          <div class="row"><span>KW xx yy</span><b>Dos keywords. Identifican el protocolo del módulo que contestó</b></div>
+          <div class="row"><span>BAUD</span><b>9600 o 10400, la cifra más cercana al ancho medido, tolerancia de 250 baudios</b></div>
+          <div class="row"><span>BITUS n</span><b>Ancho crudo del primer bit, en microsegundos</b></div>
+          <div class="row"><span>ECHO xx</span><b>Byte que devolvió la ECU después del complemento del keyword</b></div>
+          <div class="row"><span>ESPERADO xx</span><b>Complemento de la dirección enviada. Tiene que coincidir con ECHO</b></div>
+          <div class="row"><span>SESION_OK</span><b>SYNC 55 y el eco coincide con el complemento de la dirección</b></div>
+          <div class="row"><span>SESION_PARCIAL</span><b>Llegó el sincronismo y falta el eco, o el eco no coincide</b></div>
+          <div class="row"><span>SESION_RARA</span><b>Llegaron bytes y el primero no es 55</b></div>
+          <div class="row"><span>SCAN_FIN</span><b>Terminaron las cuatro direcciones</b></div>
+        </div>
+
+        <div class="split">
+          <article class="panel">
+            <p class="kicker">Sesión ilustrativa</p>
+            <pre>INIT 1C
+SYNC 55
+KW 83 76
+BAUD 10400
+BITUS 96
+ECHO E3
+ESPERADO E3
+SESION_OK</pre>
+          </article>
+          <article class="panel">
+            <p class="kicker">Cómo leer el ejemplo</p>
+            <p>E3 es el complemento de 1C. Los keywords 83 76 son los del Lucas 5AS en modo normal. Si la 27VT usa otros, el log los muestra igual, y esos son los que valen. Los números de este recuadro son ilustrativos.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="registro">
+      <div class="wrap prose">
+        <p class="kicker">Registro</p>
+        <h3>La Pi guarda cada línea</h3>
+        <pre>sudo apt install python3-serial
+sudo usermod -a -G dialout $USER
+python3 kline_log.py /dev/ttyUSB0</pre>
+        <p style="margin-top:1rem">El grupo dialout aplica después de volver a entrar a la sesión. Si el puente USB aparece como otro dispositivo: <code>python3 kline_log.py /dev/ttyACM0</code>.</p>
+        <p>Cada línea del ESP32 se copia a <code>host/logs/</code> con fecha y hora. Los comandos se escriben en esa terminal y salen hacia el ESP32. Ctrl-C cierra el puerto. En la PC, el monitor serie del IDE a 115200 hace el mismo trabajo.</p>
+      </div>
+    </section>
+
+    <section class="block" id="campo">
+      <div class="wrap prose">
+        <p class="kicker">En la camioneta</p>
+        <h3>Contacto en II, motor parado</h3>
+        <p>Batería capaz de mantener el contacto. Portón cerrado.</p>
+        <ol>
+          <li><span>01</span>Armar el circuito. Conectar masa en el pin 4 y K-Line en el pin 7. Dejar el pin 16 libre.</li>
+          <li><span>02</span>Conectar el USB del ESP32 a la Pi o a la PC.</li>
+          <li><span>03</span>Abrir el registro o el monitor. Tiene que aparecer KLINE_27VT_LISTO.</li>
+          <li><span>04</span>IFACE NPN si el circuito es el transistor. IFACE L9637 solo con el integrado a 3,3 V.</li>
+          <li><span>05</span>LEVELS. El resultado útil es KLINE_EN_REPOSO.</li>
+          <li><span>06</span>CHECK. El resultado útil es PULSO OK.</li>
+          <li><span>07</span>SCAN.</li>
+          <li><span>08</span>Guardar el archivo de host/logs/.</li>
+        </ol>
+        <h3>Orden de lectura del log</h3>
+        <ul>
+          <li><span>01</span>PULSO FALLO o KLINE_EN_BAJO: el cable o el transistor están mal. Las direcciones no se interpretan todavía.</li>
+          <li><span>02</span>Las cuatro direcciones en SILENCIO, con PULSO OK y KLINE_EN_REPOSO: la electricidad está bien y ninguna de esas direcciones despertó un módulo. El siguiente dato es probar otra dirección con INIT HH, de a una. Nunca 9D.</li>
+          <li><span>03</span>SESION_OK: quedaron fijas la dirección, la velocidad y los keywords de un módulo de este vehículo. Con esos tres números se busca el comando de lectura de Country. La escritura sigue siendo un paso aparte, de un solo campo, sobre una lectura previa de esta misma CCU.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="block" id="limites">
+      <div class="wrap prose">
+        <p class="kicker">Límites</p>
+        <h3>Este lector todavía no escribe</h3>
+        <p>No lee ni escribe el bloque de ajustes. Country, Transport mode, Tail window, VIN, EKA y EDC code siguen del lado de TestBook, T4, PScan o SM024 hasta que una sesión real entregue los comandos.</p>
+        <p>Cuando esa lectura exista, la escritura de reparación es una sola: cambiar Country de 0 a 57. Si Transport mode está activo en la misma pantalla, apagarlo en esa misma edición. El resto de los campos se copia tal como se leyeron, en especial el EDC code, el VIN 690228, Engine en Diesel, Gearbox en Manual, Drive en LHD, Doors y Tail window instalada.</p>
+        <p>El número EKA y el Master EKA son de solo lectura: se generan al fabricar la CCU. Las opciones escribibles EKA y EKA delay no forman parte de esta reparación. El EDC code es la clave con la que la CCU habilita el arranque del L-Series. Cargarlo desde otra camioneta, o modificarlo, deja el motor inmovilizado. Se sincroniza solo si se reemplaza la CCU o la ECU del motor.</p>
+        <h3>Después, calibrar la luneta</h3>
+        <p>El manual lo exige al salir de Transit Mode. Sin el dato de posición, el botón puede seguir sin completar la secuencia aunque Country ya sea 57.</p>
+        <ol>
+          <li><span>01</span>Portón cerrado, vehículo abierto, alarma desactivada.</li>
+          <li><span>02</span>Desconectar la masa de la batería, esperar al menos 10 s y reconectar.</li>
+          <li><span>03</span>Unos 2 s después el vidrio baja solo hasta el tope.</li>
+          <li><span>04</span>Subirlo del todo, bajarlo del todo y subirlo otra vez hasta el tope.</li>
+          <li><span>05</span>Si queda arriba, la calibración cerró. Si la CCU pita cerca de 1 s y el vidrio baja solo, repetir desde el primer paso.</li>
+        </ol>
+        <p style="margin-top:1rem">En el mapa del SM024, el botón del portón es Door open request. Fuera de Transit Mode, la luneta pasa de STATIONARY a GOTO COS: baja lo justo para zafar el burlete y después suelta el pestillo. Durante la calibración los estados son CAL DOWN, CAL UP y CAL STALL.</p>
+      </div>
+    </section>
+
+    <section class="block" id="referencias">
+      <div class="wrap prose">
+        <p class="kicker">Referencias</p>
+        <h3>De dónde sale cada cifra</h3>
+        <ul>
+          <li><span>01</span>Manual de taller Freelander: Transit Mode y calibración de la luneta.</li>
+          <li><span>02</span>Blackbox Solutions, ayuda SM024 v1.22: Country, Transport mode y entradas de la 27VT.</li>
+          <li><span>03</span>Conector de diagnóstico C0040: pin 7 K-Line, pin 4 masa, pin 16 batería.</li>
+          <li><span>04</span>Investigación local: lucas_27vt_investigacion.md y Proyecto_Roverta_Lucas27VT.md.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Roverta · Freelander 1 MY99</span>
+    <span>Lector de solo lectura</span>
+  </footer>
+</body>
+</html>

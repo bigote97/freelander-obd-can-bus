@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proyecto Roverta · Lucas 27VT Freelander MY99</title>
+<style>
+:root {
+  --bg: #0d1117;
+  --panel: rgba(18, 24, 33, .88);
+  --panel-2: #161d27;
+  --text: #eef4f0;
+  --muted: #a7b4ad;
+  --line: rgba(255,255,255,.12);
+  --green: #77b255;
+  --olive: #9dad64;
+  --amber: #f0b35a;
+  --red: #e05d4f;
+  --blue: #74a6d8;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(119,178,85,.22), transparent 34rem),
+    radial-gradient(circle at 80% 12%, rgba(116,166,216,.16), transparent 30rem),
+    linear-gradient(135deg, #090c10, #111820 52%, #0b0f14);
+}
+body:before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .05;
+  background-image: linear-gradient(90deg, #fff 1px, transparent 1px), linear-gradient(#fff 1px, transparent 1px);
+  background-size: 42px 42px;
+}
+.hero {
+  min-height: 72vh;
+  padding: 72px 7vw 48px;
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 42px;
+  align-items: center;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid rgba(119,178,85,.42);
+  border-radius: 999px;
+  color: #d8f2c4;
+  background: rgba(119,178,85,.1);
+  font-size: 13px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.hero h1 {
+  margin: 22px 0 18px;
+  font-size: clamp(42px, 7vw, 82px);
+  line-height: .92;
+  letter-spacing: -0.06em;
+}
+.hero p {
+  max-width: 790px;
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.hero strong { color: var(--text); }
+.hero-actions {
+  display:flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px;
+  border-radius: 14px;
+  color: #0c1117;
+  background: linear-gradient(135deg, #a9d26f, #6fac4f);
+  text-decoration: none;
+  font-weight: 800;
+  box-shadow: 0 14px 36px rgba(119,178,85,.25);
+}
+.btn.secondary {
+  color: var(--text);
+  background: rgba(255,255,255,.08);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+.vehicle-card {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+  backdrop-filter: blur(14px);
+  border-radius: 28px;
+  padding: 26px;
+  box-shadow: 0 24px 90px rgba(0,0,0,.34);
+}
+.vehicle-card .vin {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 24px;
+  letter-spacing: .08em;
+  padding: 16px;
+  border-radius: 16px;
+  background: #080b0f;
+  border: 1px solid var(--line);
+  word-break: break-all;
+}
+.metrics {
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+.metric {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+}
+.metric b {
+  display:block;
+  font-size: 22px;
+  color: #d8f2c4;
+}
+.metric span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.wrap {
+  display:grid;
+  grid-template-columns: 280px minmax(0,1fr);
+  gap: 32px;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 36px 24px 90px;
+}
+nav {
+  position: sticky;
+  top: 18px;
+  align-self:start;
+  border: 1px solid var(--line);
+  background: rgba(13,17,23,.76);
+  backdrop-filter: blur(14px);
+  border-radius: 22px;
+  padding: 18px;
+}
+nav h3 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing:.08em;
+}
+nav a {
+  display:block;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #dce8e0;
+  text-decoration:none;
+  font-size: 14px;
+}
+nav a:hover { background: rgba(119,178,85,.14); color: white; }
+main {
+  min-width:0;
+}
+.section {
+  margin-bottom: 22px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 26px;
+  padding: 30px;
+  box-shadow: 0 18px 56px rgba(0,0,0,.20);
+}
+.section h1 { display:none; }
+.section h2 {
+  margin: 0 0 18px;
+  font-size: 30px;
+  letter-spacing: -.03em;
+}
+.section h2:before {
+  content:"";
+  display:inline-block;
+  width: 10px;
+  height: 26px;
+  margin-right: 12px;
+  vertical-align:-4px;
+  border-radius: 10px;
+  background: linear-gradient(#a9d26f, #6fac4f);
+}
+.section h3 {
+  margin: 26px 0 12px;
+  font-size: 19px;
+  color: #d8f2c4;
+}
+p, li {
+  color: #d7e0dc;
+  line-height: 1.68;
+}
+ul {
+  margin: 8px 0 18px;
+  padding-left: 0;
+  list-style: none;
+}
+li {
+  position: relative;
+  padding: 8px 0 8px 26px;
+}
+li:before {
+  content:"";
+  position:absolute;
+  left: 4px;
+  top: 18px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 16px rgba(119,178,85,.75);
+}
+pre {
+  overflow:auto;
+  padding: 18px;
+  border-radius: 18px;
+  background: #070a0d;
+  border: 1px solid rgba(255,255,255,.10);
+  color: #d8f2c4;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+hr {
+  border: 0;
+  height: 1px;
+  background: var(--line);
+  margin: 24px 0;
+}
+.callouts {
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 16px;
+  margin: -20px auto 42px;
+  max-width: 1320px;
+  padding: 0 24px;
+}
+.callout {
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.07);
+  border-radius: 22px;
+  padding: 20px;
+}
+.callout .tag {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing:.08em;
+}
+.callout b {
+  display:block;
+  margin-top: 8px;
+  font-size: 18px;
+}
+.timeline {
+  display:grid;
+  gap: 12px;
+}
+.step {
+  display:grid;
+  grid-template-columns: 44px 1fr;
+  gap: 14px;
+  align-items:start;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.055);
+  border: 1px solid rgba(255,255,255,.08);
+}
+.step .num {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display:grid;
+  place-items:center;
+  color:#0b1115;
+  font-weight:900;
+  background: linear-gradient(135deg, #a9d26f, #f0b35a);
+}
+.footer {
+  padding: 40px 7vw;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  background: rgba(0,0,0,.2);
+}
+@media (max-width: 980px) {
+  .hero { grid-template-columns: 1fr; padding-top: 42px; }
+  .wrap { grid-template-columns: 1fr; }
+  nav { position: static; }
+  .callouts { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+  <section class="hero">
+    <div>
+      <span class="badge">Roverta · Investigación técnica</span>
+      <h1>Lucas 27VT<br>Freelander 1 MY99</h1>
+      <p>Documento de ingeniería para diseñar una plataforma de diagnóstico K-Line capaz de descubrir protocolo, leer estados, ejecutar pruebas de actuadores y evaluar <strong>Transit Mode</strong> en una Land Rover Freelander 1 XEDi.</p>
+      <div class="hero-actions">
+        <a class="btn" href="#arquitectura-propuesta-v1">Ver arquitectura V1</a>
+        <a class="btn secondary" href="#software-v1">Diseño de software</a>
+      </div>
+    </div>
+    <aside class="vehicle-card">
+      <div class="badge">Vehículo objetivo</div>
+      <h2>Freelander 1 XEDi</h2>
+      <div class="vin">SALLNABB8XA690228</div>
+      <div class="metrics">
+        <div class="metric"><b>MY99</b><span>Año modelo</span></div>
+        <div class="metric"><b>27VT</b><span>CCU objetivo</span></div>
+        <div class="metric"><b>K-Line</b><span>Interfaz física</span></div>
+        <div class="metric"><b>KKL USB</b><span>Hardware V1</span></div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="callouts">
+    <div class="callout"><span class="tag">Punto de partida</span><b>Descubrimiento dinámico: no asumir baudrate, dirección ni checksum.</b></div>
+    <div class="callout"><span class="tag">Seguridad</span><b>Primero solo lectura. Output tests después. Escritura en CCU al final.</b></div>
+    <div class="callout"><span class="tag">Hipótesis fuerte</span><b>Transit Mode / Country Code puede explicar portón, luneta y CDL.</b></div>
+  </section>
+
+  <div class="wrap">
+    <nav>
+      <h3>Contenido</h3>
+      <a href="#vehiculo-objetivo">Vehículo objetivo</a>
+      <a href="#objetivo-del-proyecto">Objetivo</a>
+      <a href="#hallazgos-confirmados">Hallazgos</a>
+      <a href="#riesgos-y-contradicciones-detectadas">Contradicciones</a>
+      <a href="#arquitectura-propuesta-v1">Arquitectura V1</a>
+      <a href="#hardware-v1">Hardware</a>
+      <a href="#software-v1">Software</a>
+      <a href="#etapa-1---descubrimiento">Etapa 1</a>
+      <a href="#etapa-2---output-tests">Etapa 2</a>
+      <a href="#etapa-3---transit-mode">Etapa 3</a>
+      <a href="#gaps-pendientes">Gaps</a>
+    </nav>
+    <main>
+      <div class="section" id="contenido-md">
+        <h1>Proyecto Roverta - Investigación Lucas 27VT Freelander 1 MY99</h1>
+<h2>Vehículo objetivo</h2>
+<p>VIN: SALLNABB8XA690228</p>
+<p>Decodificación:</p>
+<ul>
+<li>SAL: Land Rover UK</li>
+<li>LN: Freelander 1</li>
+<li>A: 5 puertas</li>
+<li>B: Motor L-Series 2.0 XEDi</li>
+<li>B: Manual 5 velocidades</li>
+<li>8: Especificación de mercado</li>
+<li>X: Año modelo 1999</li>
+<li>A: Solihull</li>
+<li>690228: Serie</li>
+</ul>
+<h2>Objetivo del proyecto</h2>
+<p>Desarrollar una plataforma de diagnóstico y control para la CCU Lucas 27VT utilizando el puerto OBD, capaz de:</p>
+<p>1. Detectar automáticamente parámetros de comunicación.</p>
+<p>2. Leer configuración y estados internos.</p>
+<p>3. Ejecutar pruebas de actuadores.</p>
+<p>4. Detectar Transit Mode.</p>
+<p>5. Desactivar Transit Mode.</p>
+<p>6. Generar reportes CSV y logs técnicos.</p>
+<hr>
+<h1>Hallazgos confirmados</h1>
+<h2>Arquitectura MY99</h2>
+<p>La investigación concluye que la camioneta corresponde a una arquitectura MY99 basada en:</p>
+<ul>
+<li>Lucas 27VT CCU</li>
+<li>Motor Rover L-Series XEDi</li>
+<li>K-Line ISO9141</li>
+<li>EKA disponible</li>
+<li>Configuración almacenada en CCU</li>
+</ul>
+<h2>Capacidades conocidas de la CCU</h2>
+<p>Herramientas comerciales como PScan y Faultmate permiten:</p>
+<ul>
+<li>Leer EKA</li>
+<li>Leer configuración</li>
+<li>Programar mandos RF</li>
+<li>Leer estados</li>
+<li>Leer historial de alarma</li>
+<li>Ejecutar Output Tests</li>
+<li>Configurar parámetros internos</li>
+</ul>
+<h2>Hipótesis Transit Mode</h2>
+<p>Los síntomas observados:</p>
+<ul>
+<li>Portón trasero sin funcionamiento normal</li>
+<li>Vidrio trasero sin funcionamiento normal</li>
+<li>Problemas de cierre centralizado</li>
+<li>Bosch ESI-Tronic puede abrir/cerrar</li>
+</ul>
+<p>son compatibles con una configuración anómala o Transit Mode.</p>
+<hr>
+<h1>Riesgos y contradicciones detectadas</h1>
+<h2>Baudrate</h2>
+<p>Fuentes encontradas:</p>
+<ul>
+<li>9600 bps</li>
+<li>10400 bps</li>
+</ul>
+<p>Estado actual:</p>
+<p>NO CONFIRMADO</p>
+<p>El software deberá detectarlo dinámicamente.</p>
+<h2>Dirección ECU</h2>
+<p>Posibles direcciones:</p>
+<ul>
+<li>0x1C</li>
+<li>0x9D</li>
+<li>0x10</li>
+<li>0x17</li>
+</ul>
+<p>Estado actual:</p>
+<p>NO CONFIRMADO</p>
+<h2>EEPROM</h2>
+<p>Existen dos hipótesis:</p>
+<p>A)</p>
+<ul>
+<li>EEPROM externa 93C46/93C66</li>
+</ul>
+<p>B)</p>
+<ul>
+<li>EEPROM interna MCU Motorola</li>
+</ul>
+<p>Estado actual:</p>
+<p>NO CONFIRMADO</p>
+<hr>
+<h1>Arquitectura propuesta V1</h1>
+<h2>Filosofía</h2>
+<p>No asumir ningún parámetro fijo.</p>
+<p>El sistema deberá descubrir:</p>
+<ul>
+<li>velocidad</li>
+<li>dirección</li>
+<li>inicialización</li>
+<li>capacidades</li>
+</ul>
+<p>automáticamente.</p>
+<hr>
+<h1>Hardware V1</h1>
+<h2>Conexión al vehículo</h2>
+<p>Se propone utilizar:</p>
+<p>VAG KKL 409.1 USB</p>
+<p>Razones:</p>
+<ul>
+<li>económico</li>
+<li>sin licencias</li>
+<li>acceso directo a K-Line</li>
+<li>ampliamente disponible</li>
+<li>evita diseñar electrónica automotriz inicialmente</li>
+</ul>
+<p>Arquitectura:</p>
+<p>Freelander OBD</p>
+<p>↓</p>
+<p>KKL 409.1 USB</p>
+<p>↓</p>
+<p>Notebook</p>
+<h2>Componentes</h2>
+<h3>Vehículo</h3>
+<ul>
+<li>Puerto OBD original</li>
+</ul>
+<h3>Interfaz</h3>
+<ul>
+<li>KKL 409.1 USB</li>
+<li>FT232RL o CH340</li>
+</ul>
+<h3>Notebook</h3>
+<ul>
+<li>Windows/Linux</li>
+<li>Python 3</li>
+</ul>
+<hr>
+<h1>Software V1</h1>
+<h2>Backend</h2>
+<p>Python</p>
+<p>Librerías previstas:</p>
+<ul>
+<li>pyserial</li>
+<li>pandas</li>
+<li>FastAPI o Flask</li>
+<li>sqlite</li>
+</ul>
+<h2>Frontend</h2>
+<p>Dashboard web local.</p>
+<p>Características:</p>
+<ul>
+<li>detección ECU</li>
+<li>logs HEX</li>
+<li>export CSV</li>
+<li>reportes HTML</li>
+</ul>
+<hr>
+<h1>Etapa 1 - Descubrimiento</h1>
+<h2>Objetivo</h2>
+<p>Descubrir automáticamente:</p>
+<ul>
+<li>baudrate</li>
+<li>dirección</li>
+<li>init sequence</li>
+<li>keywords</li>
+<li>checksum</li>
+</ul>
+<h2>Flujo</h2>
+<p>1. Usuario conecta KKL.</p>
+<p>2. Usuario presiona Scan.</p>
+<p>3. Sistema prueba baudrates.</p>
+<p>4. Sistema prueba métodos de inicialización.</p>
+<p>5. Sistema prueba direcciones.</p>
+<p>6. Detecta respuestas válidas.</p>
+<p>7. Almacena resultados.</p>
+<h2>Datos a mostrar</h2>
+<ul>
+<li>Baudrate detectado</li>
+<li>Dirección detectada</li>
+<li>Keywords</li>
+<li>Serial ECU</li>
+<li>Hardware ID</li>
+<li>Software ID</li>
+<li>Coding Index</li>
+<li>Country</li>
+<li>Estado puertas</li>
+<li>Estado alarma</li>
+<li>Estado portón</li>
+<li>Estado luneta</li>
+</ul>
+<h2>Exportación</h2>
+<p>Archivos:</p>
+<ul>
+<li>scan.csv</li>
+<li>raw_log.txt</li>
+</ul>
+<hr>
+<h1>Etapa 2 - Output Tests</h1>
+<h2>Objetivo</h2>
+<p>Verificar control de actuadores.</p>
+<h2>Pruebas previstas</h2>
+<h3>Unlock</h3>
+<p>CCU → apertura puertas</p>
+<h3>Lock</h3>
+<p>CCU → cierre puertas</p>
+<h3>Tailgate</h3>
+<p>Portón trasero</p>
+<h3>Rear Window</h3>
+<p>Luneta trasera</p>
+<h3>Hazard</h3>
+<p>Balizas</p>
+<h3>Horn</h3>
+<p>Bocina</p>
+<h2>Flujo</h2>
+<p>1. Usuario selecciona prueba.</p>
+<p>2. Sistema ejecuta.</p>
+<p>3. Usuario confirma resultado.</p>
+<p>4. Se genera reporte.</p>
+<hr>
+<h1>Etapa 3 - Transit Mode</h1>
+<h2>Detección</h2>
+<p>Buscar:</p>
+<ul>
+<li>Country = 0</li>
+<li>Transport Mode activo</li>
+<li>Configuraciones incompatibles</li>
+</ul>
+<h2>Procedimiento</h2>
+<p>1. Leer configuración.</p>
+<p>2. Crear backup.</p>
+<p>3. Mostrar advertencia.</p>
+<p>4. Confirmación usuario.</p>
+<p>5. Escritura.</p>
+<p>6. Verificación posterior.</p>
+<h2>Objetivo</h2>
+<p>Country = 57 (Argentina)</p>
+<p>si la investigación futura confirma dicho parámetro.</p>
+<hr>
+<h1>Evolución futura</h1>
+<h2>V2</h2>
+<p>ESP32 + K-Line</p>
+<p>Arquitectura:</p>
+<p>OBD</p>
+<p>↓</p>
+<p>Transceptor K-Line</p>
+<p>↓</p>
+<p>ESP32</p>
+<p>↓ WiFi</p>
+<p>Notebook</p>
+<h2>V3</h2>
+<p>Dispositivo autónomo:</p>
+<ul>
+<li>WiFi</li>
+<li>Bluetooth</li>
+<li>Dashboard integrado</li>
+<li>Control desde celular</li>
+</ul>
+<hr>
+<h1>Gaps pendientes</h1>
+<p>1. Dirección exacta 27VT.</p>
+<p>2. Baudrate real.</p>
+<p>3. Algoritmo checksum.</p>
+<p>4. Comandos output tests.</p>
+<p>5. Comandos Transit Mode.</p>
+<p>6. Layout EEPROM.</p>
+<p>7. Secuencia completa de inicialización.</p>
+<hr>
+<h1>Conclusión</h1>
+<p>La estrategia correcta es construir primero una plataforma de descubrimiento dinámica y de solo lectura utilizando un adaptador KKL USB y una notebook.</p>
+<p>Una vez identificado el protocolo real de la Lucas 27VT MY99, evolucionar hacia un dispositivo dedicado basado en ESP32.</p>
+      </div>
+
+      <div class="section" id="flujo-recomendado">
+        <h2>Flujo recomendado del proyecto</h2>
+        <div class="timeline">
+          <div class="step"><div class="num">1</div><div><h3>Comprar/adaptar KKL 409.1 USB</h3><p>Usarlo como interfaz K-Line cruda desde notebook, evitando ESP32/Arduino en esta etapa.</p></div></div>
+          <div class="step"><div class="num">2</div><div><h3>Implementar scanner dinámico</h3><p>Probar baudrates, métodos de inicialización y direcciones candidatas, guardando logs HEX completos.</p></div></div>
+          <div class="step"><div class="num">3</div><div><h3>Modo solo lectura</h3><p>Identificar CCU, leer estados, configuración y señales asociadas a Transit Mode.</p></div></div>
+          <div class="step"><div class="num">4</div><div><h3>Output tests controlados</h3><p>Ejecutar unlock/lock y registrar resultado humano + respuesta cruda de la CCU.</p></div></div>
+          <div class="step"><div class="num">5</div><div><h3>Escritura con backup</h3><p>Solo cuando el protocolo esté confirmado: backup, confirmación doble, escritura y verificación.</p></div></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+    Proyecto Roverta · Documento generado para investigación técnica de diagnóstico K-Line en Freelander 1 MY99.
+  </footer>
+<script>
+document.querySelectorAll('.section h2').forEach(h => {
+  if(!h.id) h.id = h.textContent.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+});
+</script>
+</body>
+</html>
