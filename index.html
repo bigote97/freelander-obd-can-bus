@@ -381,6 +381,180 @@
       margin-top: 1.2rem;
     }
 
+    /* ---- Láminas del manual y del catálogo ----
+       Los originales son línea negra sobre blanco. Se invierten y se funden
+       con el panel para que queden como trazo claro, igual que el esquemático. */
+    .plate {
+      margin: 1.8rem 0 0;
+      background: #0a0a0a;
+      border: 1px solid var(--line);
+      padding: 1rem clamp(0.8rem, 2vw, 1.4rem) 1.2rem;
+    }
+    .plate-solo {
+      display: grid;
+      grid-template-columns: minmax(0, 28rem) minmax(0, 1fr);
+      column-gap: clamp(1.2rem, 3vw, 2.4rem);
+      align-items: end;
+    }
+    .plate-solo .plate-bar { grid-column: 1 / -1; }
+    .plate-solo img { filter: invert(1) grayscale(1) contrast(1.8) brightness(1.15); }
+    .plate-solo figcaption { margin: 0; max-width: 36ch; font-size: 0.86rem; }
+    @media (max-width: 760px) {
+      .plate-solo { grid-template-columns: 1fr; }
+      .plate-solo figcaption { margin-top: 1rem; }
+    }
+    .plate-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem 1.2rem;
+      margin-bottom: 1rem;
+    }
+    .plate .t-cap {
+      font-size: 0.66rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .plate-img { position: relative; }
+    .plate-img img {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: invert(1) grayscale(1) contrast(1.25) brightness(0.92);
+      mix-blend-mode: screen;
+    }
+    .plate-crop { aspect-ratio: 513 / 492; }
+    .plate-crop img { position: absolute; inset: 0 0 auto; clip-path: inset(0 0 16.9% 0); }
+    .plate figcaption {
+      margin-top: 1rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--line);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .plate-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(14rem, 1fr);
+      gap: 1.4rem clamp(1.2rem, 3vw, 2.4rem);
+      align-items: start;
+    }
+    .spot {
+      position: absolute;
+      width: 2.1rem;
+      height: 2.1rem;
+      margin: -1.05rem 0 0 -1.05rem;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(1.6);
+      transition: opacity 0.25s, transform 0.35s cubic-bezier(.2, .7, .2, 1);
+      pointer-events: none;
+    }
+    .spot.on { opacity: 1; transform: scale(1); }
+    .spot.on::after {
+      content: "";
+      position: absolute;
+      inset: -0.35rem;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+    }
+    .prose .plate-legend { margin: 0; font-size: 0.86rem; }
+    .prose .plate-legend li {
+      padding: 0.42rem 0.4rem;
+      cursor: default;
+      transition: color 0.2s, opacity 0.2s, background 0.2s;
+    }
+    .plate-legend li small { display: block; color: var(--dim); font-size: 0.74rem; }
+    .plate-legend li.key { color: var(--ink); }
+    .plate-legend li:hover, .plate-legend li:focus-visible, .plate-legend li.on { color: var(--ink); background: rgba(255, 255, 255, 0.04); }
+    .plate-legend li:focus-visible { outline-offset: -1px; }
+    .plate-map.transit .plate-legend li:not(.off):not(.key) { opacity: 0.35; }
+    .plate-map.transit .plate-legend li.off { color: var(--ink); }
+    @media (max-width: 760px) {
+      .plate-grid { grid-template-columns: 1fr; }
+      .prose .plate-legend { display: grid; grid-template-columns: 1fr 1fr; column-gap: 1rem; }
+      .spot { width: 1.6rem; height: 1.6rem; margin: -0.8rem 0 0 -0.8rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .spot { transition: none; }
+    }
+
+    /* ---- Referencias y visor de documentos ---- */
+    .refs li div { color: var(--ink); }
+    .refs li small { display: block; color: var(--muted); font-size: 0.86rem; margin-top: 0.15rem; }
+    .refs a { border-bottom: 1px solid var(--line-strong); }
+    .refs a:hover { border-color: var(--ink); }
+    .refs a i { font-style: normal; color: var(--dim); }
+    h3.docs-title { margin-top: 3.2rem; }
+    .docs {
+      display: grid;
+      grid-template-columns: minmax(12rem, 16rem) 1fr;
+      margin-top: 1.4rem;
+      border: 1px solid var(--line);
+    }
+    .doc-tabs { display: flex; flex-direction: column; border-right: 1px solid var(--line); }
+    .doc-tabs button {
+      all: unset;
+      cursor: pointer;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .doc-tabs button b { display: block; font-weight: 500; font-size: 0.92rem; }
+    .doc-tabs button small { display: block; font-size: 0.74rem; color: var(--dim); margin-top: 0.1rem; }
+    .doc-tabs button:hover { color: var(--ink); }
+    .doc-tabs button:focus-visible { outline: 1px solid #fff; outline-offset: -3px; }
+    .doc-tabs button[aria-selected="true"] { color: var(--ink); background: rgba(255, 255, 255, 0.05); box-shadow: inset 2px 0 0 var(--ink); }
+    .doc-view { min-width: 0; display: flex; flex-direction: column; }
+    .doc-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.7rem 1.2rem;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.78rem;
+      color: var(--dim);
+    }
+    .doc-bar a { color: var(--muted); white-space: nowrap; }
+    .doc-bar a:hover { color: var(--ink); }
+    .doc-bar code { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .md {
+      max-height: 70vh;
+      overflow: auto;
+      padding: 1.2rem 1.4rem 2rem;
+      font-size: 0.94rem;
+      color: #d6d6d6;
+    }
+    .md h1, .md h2, .md h3, .md h4 { color: var(--ink); font-weight: 500; letter-spacing: -0.02em; line-height: 1.2; margin: 1.8rem 0 0.6rem; }
+    .md h1 { font-size: 1.6rem; margin-top: 0.4rem; }
+    .md h2 { font-size: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+    .md h3 { font-size: 1.05rem; }
+    .md h4 { font-size: 0.95rem; }
+    .md p, .md ul, .md ol, .md pre, .md table, .md blockquote { margin: 0.7rem 0; }
+    .md ul, .md ol { padding-left: 1.3rem; list-style: revert; color: inherit; }
+    .md li { display: list-item; padding: 0.15rem 0; border: 0; }
+    .md a { border-bottom: 1px solid var(--line-strong); }
+    .md strong { color: var(--ink); font-weight: 600; }
+    .md code { background: rgba(255, 255, 255, 0.07); padding: 0.05rem 0.3rem; }
+    .md pre { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--line); padding: 0.9rem 1rem; overflow: auto; }
+    .md pre code { background: none; padding: 0; }
+    .md table { border-collapse: collapse; display: block; overflow-x: auto; font-size: 0.86rem; }
+    .md th, .md td { border: 1px solid var(--line); padding: 0.4rem 0.65rem; text-align: left; vertical-align: top; }
+    .md th { color: var(--ink); font-weight: 500; background: rgba(255, 255, 255, 0.04); }
+    .md blockquote { border-left: 2px solid var(--line-strong); padding-left: 1rem; color: var(--muted); }
+    .md hr { border: 0; border-top: 1px solid var(--line); margin: 1.6rem 0; }
+    .md img { max-width: 100%; }
+    @media (max-width: 760px) {
+      .docs { grid-template-columns: 1fr; }
+      .doc-tabs { flex-direction: row; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+      .doc-tabs button { flex: 0 0 auto; border-bottom: 0; border-right: 1px solid var(--line); }
+      .doc-tabs button small { display: none; }
+      .doc-tabs button[aria-selected="true"] { box-shadow: inset 0 -2px 0 var(--ink); }
+      .md { max-height: 75vh; padding: 1rem; }
+    }
+
     footer {
       border-top: 1px solid var(--line);
       padding: 1.4rem var(--pad) 2rem;
@@ -753,6 +927,13 @@
           <div class="row"><span>Coding Index</span><b>1 esperado. EKA presente. Inmovilizador dentro de la CCU</b></div>
           <div class="row"><span>ECU de motor</span><b>EDC del L-Series. Se reconoce con la CCU por el campo EDC code</b></div>
         </div>
+        <figure class="plate plate-solo">
+          <div class="plate-bar"><span class="t-cap">Lámina D04.005 · 03-2003</span><span class="t-cap">Catálogo de piezas</span></div>
+          <div class="plate-img">
+            <img src="img/freelander-catalogo-d04005.jpg" width="458" height="458" loading="lazy" alt="Despiece de alarma e inmovilización del Freelander 1: la CCU, el mando a distancia con su pila, los módulos y las dos bocinas, con los cableados marcados sobre la silueta del vehículo.">
+          </div>
+          <figcaption>Alarma e inmovilización en el catálogo de piezas. La CCU (1) va separada del resto; el mando (2) lleva la pila (3), y las bocinas (9 y 14) cuelgan del frente.</figcaption>
+        </figure>
         <a class="next" href="#sintoma"><small>Sigue · 02</small><b>Síntoma<i>→</i></b></a>
       </div>
     </section>
@@ -763,6 +944,51 @@
         <h3>La entrada vive. La salida no.</h3>
         <p>El botón del portón llega a la CCU: en el escáner Bosch la entrada cambia de estado. El vidrio y el pestillo no se mueven.</p>
         <p>Ese patrón coincide con el Transit Mode del manual de taller. Con la CCU en ese modo quedan desactivados el receptor de radio de los mandos, el pestillo del portón, la luneta trasera, el cierre centralizado y las luces interiores.</p>
+        <figure class="plate plate-map" id="mapa">
+          <div class="plate-bar">
+            <div class="views" role="group" aria-label="Vista del mapa">
+              <button type="button" data-view="" aria-pressed="true">Todo</button>
+              <button type="button" data-view="transit" aria-pressed="false">Apagado en Transit</button>
+            </div>
+            <span class="t-cap">Manual de taller · alarma y CCU</span>
+          </div>
+          <div class="plate-grid">
+            <div class="plate-img plate-crop">
+              <img src="img/freelander-alarma-ccu.jpg" width="513" height="592" loading="lazy" alt="Mapa del sistema de alarma y cierre del Freelander 1: catorce componentes numerados alrededor del vehículo, conectados a la unidad de control de carrocería.">
+              <i class="spot" data-n="1" style="left:5.8%;top:46.3%"></i>
+              <i class="spot" data-n="2" style="left:95.7%;top:69.7%"></i>
+              <i class="spot" data-n="3" style="left:90.8%;top:30.5%"></i>
+              <i class="spot" data-n="4" style="left:47.8%;top:28.9%"></i>
+              <i class="spot" data-n="5" style="left:10.3%;top:14.6%"></i>
+              <i class="spot" data-n="6" style="left:40.9%;top:5.7%"></i>
+              <i class="spot" data-n="7" style="left:62%;top:97.2%"></i>
+              <i class="spot" data-n="8" style="left:89.5%;top:14.6%"></i>
+              <i class="spot" data-n="9" style="left:79.9%;top:77%"></i>
+              <i class="spot" data-n="10" style="left:12.7%;top:31.9%"></i>
+              <i class="spot" data-n="11" style="left:74.2%;top:82.2%"></i>
+              <i class="spot" data-n="12" style="left:8.4%;top:80.5%"></i>
+              <i class="spot" data-n="13" style="left:38.2%;top:98.8%"></i>
+              <i class="spot" data-n="14" style="left:26.5%;top:94.5%"></i>
+            </div>
+            <ol class="plate-legend">
+              <li tabindex="0" data-n="7" class="key"><span>07</span><div>Unidad de control de carrocería<small>La CCU 27VT</small></div></li>
+              <li tabindex="0" data-n="6" class="off"><span>06</span><div>Receptor RF</div></li>
+              <li tabindex="0" data-n="5" class="off"><span>05</span><div>Mando a distancia</div></li>
+              <li tabindex="0" data-n="3" class="off"><span>03</span><div>Cerradura del portón</div></li>
+              <li tabindex="0" data-n="2" class="off"><span>02</span><div>Cerraduras de puertas</div></li>
+              <li tabindex="0" data-n="11" class="off"><span>11</span><div>Interruptor del cierre centralizado</div></li>
+              <li tabindex="0" data-n="4"><span>04</span><div>LED de alarma</div></li>
+              <li tabindex="0" data-n="8"><span>08</span><div>Sensor volumétrico</div></li>
+              <li tabindex="0" data-n="9"><span>09</span><div>Cilindro de llave, puerta del conductor</div></li>
+              <li tabindex="0" data-n="1"><span>01</span><div>Contacto del capó</div></li>
+              <li tabindex="0" data-n="10"><span>10</span><div>Contacto de encendido</div></li>
+              <li tabindex="0" data-n="13"><span>13</span><div>ECU del inmovilizador</div></li>
+              <li tabindex="0" data-n="12"><span>12</span><div>ECU del ABS</div></li>
+              <li tabindex="0" data-n="14"><span>14</span><div>Bocina</div></li>
+            </ol>
+          </div>
+          <figcaption id="mapa-cap">Todo lo que cuelga de la CCU. Pasá por la lista para ubicar cada pieza en el dibujo.</figcaption>
+        </figure>
         <p>La CCU sigue despierta e informa el botón. Con el contacto en posición II, el zumbador interno suena para avisar que el modo sigue activo.</p>
         <p>En Coding Index 1 hay además un campo separado, Transport mode. Se lee junto con Country. La salida de fábrica, con TestBook, T4, PScan o SM024, pasa Country de 0 a 57 y deja el resto del bloque como estaba.</p>
         <p>Los marcadores de temperatura y combustible no pasan por la 27VT. Van del sensor al tablero. Este dispositivo no los corrige.</p>
@@ -1150,12 +1376,29 @@ python3 kline_log.py /dev/ttyUSB0</pre>
       <div class="wrap prose">
         <p class="kicker">11 · Referencias</p>
         <h3>De dónde sale cada cifra</h3>
-        <ul>
-          <li><span>01</span>Manual de taller Freelander: Transit Mode y calibración de la luneta.</li>
-          <li><span>02</span>Blackbox Solutions, ayuda SM024 v1.22: Country, Transport mode y entradas de la 27VT.</li>
-          <li><span>03</span>Conector de diagnóstico C0040: pin 7 K-Line, pin 4 masa, pin 16 batería.</li>
-          <li><span>04</span>Investigación local: lucas_27vt_investigacion.md y Proyecto_Roverta_Lucas27VT.md.</li>
+        <ul class="refs">
+          <li><span>01</span><div><a href="https://blackbox-solutions.com/help/SM024.html" target="_blank" rel="noopener">Blackbox Solutions, ayuda SM024 v1.22 <i>↗</i></a><small>Country, Transport mode y entradas de la 27VT.</small></div></li>
+          <li><span>02</span><div><a href="https://rovermems.com/5as/index.html" target="_blank" rel="noopener">rovermems.com, protocolo Lucas 5AS <i>↗</i></a><small>James Portman. Wakeup de 5 baudios, 8N1, comandos 0x3x, 0xF6 y EEPROM en doble copia.</small></div></li>
+          <li><span>03</span><div><a href="https://pscan.uk" target="_blank" rel="noopener">PScan <i>↗</i></a><small>Protocolo MY97-99 de la 27VT: configuración, mandos PLIP y datos en vivo.</small></div></li>
+          <li><span>04</span><div>Manual de taller Freelander<small>Transit Mode y calibración de la luneta. Sin enlace público.</small></div></li>
+          <li><span>05</span><div>Conector de diagnóstico C0040<small>Pin 7 K-Line (ISO 9141), pin 4 masa, pin 16 batería.</small></div></li>
+          <li><span>06</span><div><a href="https://github.com/bigote97/freelander-obd-can-bus" target="_blank" rel="noopener">Repositorio del proyecto <i>↗</i></a><small>Investigación propia, firmware y registro. Los documentos se leen abajo.</small></div></li>
         </ul>
+
+        <h3 class="docs-title">Nuestros documentos</h3>
+        <div class="docs">
+          <div class="doc-tabs" role="tablist" aria-label="Documentos del repositorio">
+            <button role="tab" data-md="Lector_KLine_Freelander_27VT.md" aria-selected="true"><b>Lector K-Line</b><small>Circuito, firmware y campo</small></button>
+            <button role="tab" data-md="lucas_27vt_investigacion.md" aria-selected="false"><b>Investigación 27VT</b><small>Protocolo, Transit Mode, herramientas</small></button>
+            <button role="tab" data-md="Proyecto_Roverta_Lucas27VT.md" aria-selected="false"><b>Proyecto Roverta</b><small>Plan general</small></button>
+            <button role="tab" data-md="Informe_Tecnico_Lucas_27VT.md" aria-selected="false"><b>Informe técnico</b><small>Resumen por prioridades</small></button>
+            <button role="tab" data-md="investigacion_lucas_27vt.md" aria-selected="false"><b>Notas iniciales</b><small>Primera investigación</small></button>
+          </div>
+          <div class="doc-view" role="tabpanel">
+            <div class="doc-bar"><code id="doc-name">Lector_KLine_Freelander_27VT.md</code><a id="doc-src" href="https://github.com/bigote97/freelander-obd-can-bus/blob/main/Lector_KLine_Freelander_27VT.md" target="_blank" rel="noopener">Ver en GitHub ↗</a></div>
+            <article id="doc-body" class="md" tabindex="0"><p>Cargando…</p></article>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -1223,7 +1466,7 @@ python3 kline_log.py /dev/ttyUSB0</pre>
       // Esquemático: vistas RX / TX y resaltado desde la tabla
       var svg = document.getElementById('schem');
       var cap = document.getElementById('schem-cap');
-      var buttons = document.querySelectorAll('.views button');
+      var buttons = document.querySelectorAll('.schem-box .views button');
       var captions = {
         '': cap.textContent,
         rx: 'Lectura. El pin 7 pasa por 150 kΩ y llega al GPIO 26. El 47 kΩ y el zener, en paralelo a masa, dejan el nodo en 3,3 V como máximo.',
@@ -1252,6 +1495,129 @@ python3 kline_log.py /dev/ttyUSB0</pre>
         r.addEventListener('mouseleave', off);
         r.addEventListener('blur', off);
       });
+    })();
+  </script>
+
+  <script>
+    // Mapa de la CCU: la lista marca cada pieza en la lámina, y la vista
+    // "Apagado en Transit" deja a la vista lo que el modo desactiva.
+    (function () {
+      var map = document.getElementById('mapa');
+      if (!map) return;
+      var cap = document.getElementById('mapa-cap');
+      var rows = map.querySelectorAll('.plate-legend li');
+      var spots = {};
+      map.querySelectorAll('.spot').forEach(function (s) { spots[s.dataset.n] = s; });
+      var captions = {
+        '': cap.textContent,
+        transit: 'Con Country en 0, la CCU deja sin servicio el receptor de los mandos, los pestillos de puertas y portón, y el cierre centralizado. La luneta y las luces interiores caen con ellos.'
+      };
+      var view = '';
+      function mark(list) {
+        Object.keys(spots).forEach(function (n) { spots[n].classList.toggle('on', list.indexOf(n) > -1); });
+        rows.forEach(function (r) { r.classList.toggle('on', list.indexOf(r.dataset.n) > -1 && list.length === 1); });
+      }
+      function base() {
+        if (view !== 'transit') return mark([]);
+        var off = [];
+        map.querySelectorAll('.plate-legend li.off').forEach(function (r) { off.push(r.dataset.n); });
+        mark(off);
+      }
+      rows.forEach(function (r) {
+        function on() { mark([r.dataset.n]); }
+        r.addEventListener('mouseenter', on);
+        r.addEventListener('focus', on);
+        r.addEventListener('mouseleave', base);
+        r.addEventListener('blur', base);
+      });
+      var buttons = map.querySelectorAll('.views button');
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () {
+          view = b.dataset.view;
+          buttons.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+          map.classList.toggle('transit', view === 'transit');
+          cap.textContent = captions[view];
+          base();
+        });
+      });
+    })();
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+  <script>
+    // Visor de los .md del repositorio: lee el archivo local (GitHub Pages o servidor)
+    // y, si no se puede (abierto como file://), cae al raw de GitHub.
+    (function () {
+      var REPO = 'https://github.com/bigote97/freelander-obd-can-bus/blob/main/';
+      var RAW = 'https://raw.githubusercontent.com/bigote97/freelander-obd-can-bus/main/';
+      var tabs = document.querySelectorAll('.doc-tabs button');
+      var body = document.getElementById('doc-body');
+      var name = document.getElementById('doc-name');
+      var src = document.getElementById('doc-src');
+      var cache = {};
+
+      function get(url) {
+        return fetch(url).then(function (r) {
+          if (!r.ok) throw new Error(r.status);
+          return r.text();
+        });
+      }
+
+      function render(file, text) {
+        if (!window.marked || !window.DOMPurify) {
+          body.innerHTML = '';
+          var pre = document.createElement('pre');
+          pre.textContent = text;
+          body.appendChild(pre);
+          return;
+        }
+        body.innerHTML = DOMPurify.sanitize(marked.parse(text));
+        body.querySelectorAll('a[href]').forEach(function (a) {
+          var href = a.getAttribute('href');
+          if (/^https?:/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; }
+          else if (/\.md$/.test(href)) {
+            a.addEventListener('click', function (e) {
+              var t = document.querySelector('.doc-tabs button[data-md="' + href + '"]');
+              if (t) { e.preventDefault(); t.click(); }
+            });
+          }
+        });
+      }
+
+      function load(file) {
+        name.textContent = file;
+        src.href = REPO + file;
+        body.scrollTop = 0;
+        if (cache[file]) return render(file, cache[file]);
+        body.innerHTML = '<p>Cargando…</p>';
+        get(file).catch(function () { return get(RAW + file); }).then(function (text) {
+          cache[file] = text;
+          if (name.textContent === file) render(file, text);
+        }).catch(function () {
+          body.innerHTML = '<p>No se pudo cargar el documento. Abrilo en <a href="' + REPO + file + '" target="_blank" rel="noopener">GitHub</a>.</p>';
+        });
+      }
+
+      tabs.forEach(function (b, i) {
+        b.addEventListener('click', function () {
+          tabs.forEach(function (o) {
+            o.setAttribute('aria-selected', String(o === b));
+            o.tabIndex = o === b ? 0 : -1;
+          });
+          load(b.dataset.md);
+        });
+        b.addEventListener('keydown', function (e) {
+          var d = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+          if (!d) return;
+          e.preventDefault();
+          var n = tabs[(i + d + tabs.length) % tabs.length];
+          n.focus();
+          n.click();
+        });
+        b.tabIndex = i === 0 ? 0 : -1;
+      });
+      load(tabs[0].dataset.md);
     })();
   </script>
 </body>
