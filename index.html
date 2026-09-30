@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#050505">
   <title>Lector K-Line — Freelander 1 MY99</title>
+  <script>document.documentElement.classList.add('js')</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -56,7 +57,7 @@
       top: 0;
       z-index: 10;
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: auto 1fr;
       gap: 1rem 1.5rem;
       align-items: center;
       padding: 1.15rem var(--pad);
@@ -73,7 +74,7 @@
 
     nav {
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
       flex-wrap: wrap;
       gap: 0.55rem 1.15rem;
     }
@@ -86,16 +87,6 @@
       font-weight: 500;
     }
     nav a:hover { color: var(--ink); }
-
-    .lang {
-      justify-self: end;
-      font-size: 0.68rem;
-      letter-spacing: 0.16em;
-      color: var(--muted);
-      border: 1px solid var(--line-strong);
-      border-radius: 999px;
-      padding: 0.28rem 0.7rem;
-    }
 
     main { padding-bottom: 5rem; }
 
@@ -402,7 +393,231 @@
       text-transform: uppercase;
     }
 
+    /* ---- Progreso y navegación activa ---- */
+    header.scrolled { border-bottom-color: var(--line); }
+    .progress {
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      height: 1px;
+      width: 100%;
+      transform-origin: 0 50%;
+      transform: scaleX(0);
+      background: var(--ink);
+      pointer-events: none;
+    }
+    nav a { position: relative; transition: color 0.25s; }
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: -0.35rem;
+      height: 1px;
+      background: var(--ink);
+      transform: scaleX(0);
+      transform-origin: 0 50%;
+      transition: transform 0.35s ease;
+    }
+    nav a.active { color: var(--ink); }
+    nav a.active::after { transform: scaleX(1); }
+
+    /* ---- Aparición al hacer scroll (solo con JS) ---- */
+    .js .rv {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .js .rv.in { opacity: 1; transform: none; }
+
+    /* ---- Trazo del hero ---- */
+    .trace {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      animation: draw 2.8s cubic-bezier(.6,.05,.3,1) 0.2s forwards;
+    }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    .stage-meta span { opacity: 0; animation: fade 0.8s ease forwards; }
+    .stage-meta span:first-child { animation-delay: 0.9s; }
+    .stage-meta span:last-child { animation-delay: 2.4s; }
+    @keyframes fade { to { opacity: 1; } }
+
+    /* ---- Cadena de la señal ---- */
+    .chain-wrap { padding: 0 0 clamp(3rem, 6vw, 5rem); }
+    .chain {
+      list-style: none;
+      margin: 1.4rem 0 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      border-top: 1px solid var(--line);
+    }
+    .chain li { position: relative; }
+    .chain a {
+      display: block;
+      height: 100%;
+      padding: 1.1rem 1.2rem 1.2rem 0;
+    }
+    .chain small {
+      display: block;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .chain b {
+      display: block;
+      margin: 0.55rem 0 0.2rem;
+      font-weight: 400;
+      font-size: clamp(1.1rem, 1.8vw, 1.45rem);
+      letter-spacing: -0.03em;
+      transition: transform 0.3s ease;
+    }
+    .chain em {
+      font-style: normal;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .chain a:hover b { transform: translateX(4px); }
+    /* pulso que recorre el borde superior de cada eslabón */
+    .chain li::before {
+      content: "";
+      position: absolute;
+      top: -3px;
+      left: 0;
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--ink);
+      box-shadow: 0 0 10px rgba(255,255,255,0.6);
+      opacity: 0;
+      animation: hop 6s linear infinite;
+      animation-delay: calc(var(--i) * 1s);
+    }
+    @keyframes hop {
+      0% { left: 0; opacity: 0; }
+      2% { opacity: 1; }
+      15% { left: calc(100% - 5px); opacity: 1; }
+      17%, 100% { left: calc(100% - 5px); opacity: 0; }
+    }
+    .chain li + li a { padding-left: 1.2rem; border-left: 1px solid var(--line); }
+
+    /* ---- Esquemático ---- */
+    .schem-box {
+      margin-top: 1.6rem;
+      background: #0a0a0a;
+      border: 1px solid var(--line);
+      padding: 1rem clamp(0.8rem, 2vw, 1.4rem) 1.2rem;
+    }
+    .schem-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem 1.2rem;
+    }
+    .views { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .views button {
+      font: inherit;
+      font-size: 0.66rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 0.35rem 0.8rem;
+      cursor: pointer;
+      transition: color 0.2s, background 0.2s, border-color 0.2s;
+    }
+    .views button:hover { color: var(--ink); border-color: var(--ink); }
+    .views button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; font-size: 0.72rem; color: var(--muted); }
+    .legend i {
+      display: inline-block;
+      width: 1.4rem; height: 0;
+      vertical-align: middle;
+      margin-right: 0.45rem;
+      border-top: 2px solid var(--ink);
+    }
+    .legend i.l33 { border-top: 1.5px solid #8d8d8d; }
+    .legend i.lg { border-top: 1.5px solid #5a5a5a; }
+    .schem-scroll { overflow-x: auto; margin-top: 0.8rem; }
+    .schem { display: block; width: 100%; min-width: 640px; height: auto; }
+    .schem text {
+      font-family: Manrope, "Helvetica Neue", Arial, sans-serif;
+      font-size: 13px;
+      fill: #8d8d8d;
+    }
+    .schem .t-lbl { fill: #f3f3f3; font-size: 14px; }
+    .schem .t-cap { font-size: 11px; letter-spacing: 0.16em; fill: #5a5a5a; }
+    .schem .t-mono { font-family: "IBM Plex Mono", ui-monospace, Consolas, monospace; font-size: 12px; }
+    .schem .w12 { stroke: #f3f3f3; stroke-width: 2; }
+    .schem .w33 { stroke: #8d8d8d; stroke-width: 1.5; }
+    .schem .wg { stroke: #5a5a5a; stroke-width: 1.5; }
+    .schem .box { stroke: rgba(255,255,255,0.28); stroke-width: 1; }
+    .schem .comp { fill: #0a0a0a; stroke: #f3f3f3; stroke-width: 1.5; }
+    .schem .comp33 { fill: #0a0a0a; stroke: #8d8d8d; stroke-width: 1.5; }
+    .schem .dot { fill: #f3f3f3; }
+    .schem .p { transition: opacity 0.3s ease; }
+    .schem.focusing .p:not(.on) { opacity: 0.14; }
+    .schem.focusing .p.on .wire {
+      stroke-dasharray: 5 7;
+      animation: flow 0.9s linear infinite;
+    }
+    @keyframes flow { to { stroke-dashoffset: -12; } }
+    .schem-cap {
+      margin: 0.9rem 0 0;
+      color: var(--muted);
+      font-size: 0.85rem;
+      min-height: 2.6em;
+    }
+    .row[data-part] { cursor: default; transition: background 0.2s; }
+    .row[data-part]:hover, .row[data-part]:focus { background: rgba(255,255,255,0.03); outline: none; }
+    details.ascii { margin-top: 1rem; }
+    details.ascii summary {
+      cursor: pointer;
+      font-size: 0.66rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    details.ascii summary:hover { color: var(--ink); }
+
+    /* ---- Siguiente capítulo ---- */
+    .next {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      margin-top: clamp(2.2rem, 4vw, 3.2rem);
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+    }
+    .next small {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+    .next b {
+      font-weight: 400;
+      font-size: clamp(1.2rem, 2vw, 1.6rem);
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+    .next b i {
+      font-style: normal;
+      display: inline-block;
+      margin-left: 0.5rem;
+      transition: transform 0.3s ease;
+    }
+    .next:hover b i { transform: translateX(6px); }
+
     @media (max-width: 860px) {
+      .chain { grid-template-columns: 1fr 1fr; }
+      .chain li + li a { border-left: 0; padding-left: 0; }
+      .chain li { border-bottom: 1px solid var(--line); }
+      .chain li:nth-child(even) a { padding-left: 1.2rem; border-left: 1px solid var(--line); }
+      .chain li::before { display: none; }
       header {
         display: flex;
         flex-wrap: wrap;
@@ -430,6 +645,12 @@
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
+      .trace { animation: none; stroke-dashoffset: 0; }
+      .stage-meta span { animation: none; opacity: 1; }
+      .chain li::before { display: none; }
+      .js .rv { opacity: 1; transform: none; transition: none; }
+      .schem.focusing .p.on .wire { animation: none; stroke-dasharray: none; }
+      nav a::after, .next b i, .chain b { transition: none; }
     }
   </style>
 </head>
@@ -444,10 +665,11 @@
       <a href="#placas">Placas</a>
       <a href="#circuito">Circuito</a>
       <a href="#firmware">Firmware</a>
+      <a href="#registro">Registro</a>
       <a href="#campo">Campo</a>
       <a href="#limites">Límites</a>
     </nav>
-    <span class="lang">ES</span>
+    <div class="progress" aria-hidden="true"></div>
   </header>
 
   <main id="contenido">
@@ -463,7 +685,11 @@
       </div>
       <div class="stage" role="img" aria-label="Trazo de la K-Line: un pulso lento de 5 baudios y después la ráfaga de la sesión.">
         <svg viewBox="0 0 1200 340" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M40 250 H220 V170 H300 V250 H380 V170 H460 V250 H700 V120 H724 V250 H748 V120 H772 V250 H796 V120 H820 V250 H844 V120 H868 V250 H1160" stroke="#f3f3f3" stroke-width="1.25"/>
+          <path id="traza" class="trace" pathLength="1" d="M40 250 H220 V170 H300 V250 H380 V170 H460 V250 H700 V120 H724 V250 H748 V120 H772 V250 H796 V120 H820 V250 H844 V120 H868 V250 H1160" stroke="#f3f3f3" stroke-width="1.25"/>
+          <circle r="3.5" fill="#fff" opacity="0" style="filter:drop-shadow(0 0 6px #fff)">
+            <animateMotion id="cometa" dur="7s" begin="indefinite" repeatCount="indefinite" calcMode="linear"><mpath href="#traza"/></animateMotion>
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.03;0.95;1" dur="7s" begin="cometa.begin" repeatCount="indefinite"/>
+          </circle>
         </svg>
         <div class="stage-meta">
           <span>5 baudios</span>
@@ -501,21 +727,21 @@
       <p>El ESP32 habla con la camioneta por el conector OBD. La Raspberry Pi Zero W registra la sesión. El firmware abre la comunicación, mide la velocidad y publica los bytes. Country, el código EDC y el EKA quedan sin tocar hasta que una sesión real entregue el comando de lectura.</p>
     </section>
 
-    <section class="block" id="archivos">
-      <div class="wrap prose">
-        <p class="kicker">Archivos</p>
-        <h3>Qué hay en el repositorio</h3>
-        <div class="sheet">
-          <div class="row"><span>Firmware</span><b><code>firmware/esp32_kline/esp32_kline.ino</code></b></div>
-          <div class="row"><span>Registro</span><b><code>host/kline_log.py</code></b></div>
-          <div class="row"><span>Logs</span><b><code>host/logs/kline-AAAAMMDD-HHMMSS.log</code></b></div>
-        </div>
-      </div>
+    <section class="wrap chain-wrap" aria-label="Recorrido de la señal">
+      <p class="kicker">Recorrido de la señal</p>
+      <ol class="chain">
+        <li style="--i:0"><a href="#sintoma"><small>Módulo</small><b>CCU 27VT</b><em>En Transit Mode</em></a></li>
+        <li style="--i:1"><a href="#bus"><small>Bus</small><b>Pin 7</b><em>K-Line, 12 V</em></a></li>
+        <li style="--i:2"><a href="#circuito"><small>Interfaz</small><b>NPN</b><em>12 V ↔ 3,3 V</em></a></li>
+        <li style="--i:3"><a href="#firmware"><small>Tiempo</small><b>ESP32</b><em>5 bd y 10 kbaud</em></a></li>
+        <li style="--i:4"><a href="#registro"><small>USB 115200</small><b>Pi Zero W</b><em>kline_log.py</em></a></li>
+        <li style="--i:5"><a href="#campo"><small>Salida</small><b>Log</b><em>host/logs/</em></a></li>
+      </ol>
     </section>
 
     <section class="block" id="vehiculo">
       <div class="wrap prose">
-        <p class="kicker">Vehículo</p>
+        <p class="kicker">01 · Vehículo</p>
         <h3>SALLNABB8XA690228</h3>
         <div class="sheet">
           <div class="row"><span>Marca / planta</span><b>Land Rover, Solihull</b></div>
@@ -527,24 +753,26 @@
           <div class="row"><span>Coding Index</span><b>1 esperado. EKA presente. Inmovilizador dentro de la CCU</b></div>
           <div class="row"><span>ECU de motor</span><b>EDC del L-Series. Se reconoce con la CCU por el campo EDC code</b></div>
         </div>
+        <a class="next" href="#sintoma"><small>Sigue · 02</small><b>Síntoma<i>→</i></b></a>
       </div>
     </section>
 
     <section class="block" id="sintoma">
       <div class="wrap prose">
-        <p class="kicker">Síntoma</p>
+        <p class="kicker">02 · Síntoma</p>
         <h3>La entrada vive. La salida no.</h3>
         <p>El botón del portón llega a la CCU: en el escáner Bosch la entrada cambia de estado. El vidrio y el pestillo no se mueven.</p>
         <p>Ese patrón coincide con el Transit Mode del manual de taller. Con la CCU en ese modo quedan desactivados el receptor de radio de los mandos, el pestillo del portón, la luneta trasera, el cierre centralizado y las luces interiores.</p>
         <p>La CCU sigue despierta e informa el botón. Con el contacto en posición II, el zumbador interno suena para avisar que el modo sigue activo.</p>
         <p>En Coding Index 1 hay además un campo separado, Transport mode. Se lee junto con Country. La salida de fábrica, con TestBook, T4, PScan o SM024, pasa Country de 0 a 57 y deja el resto del bloque como estaba.</p>
         <p>Los marcadores de temperatura y combustible no pasan por la 27VT. Van del sensor al tablero. Este dispositivo no los corrige.</p>
+        <a class="next" href="#bus"><small>Sigue · 03</small><b>Bus<i>→</i></b></a>
       </div>
     </section>
 
     <section class="block" id="bus">
       <div class="wrap prose">
-        <p class="kicker">Bus</p>
+        <p class="kicker">03 · Bus</p>
         <h3>K-Line en el pin 7</h3>
         <p>La 27VT de este año modelo se alcanza por K-Line ISO 9141. No hay sesión de diagnóstico de la CCU por CAN. Un transceptor CAN, MCP2515 u otro, no despierta esta unidad.</p>
         <p>El mismo pin 7 lo comparten varios módulos. Cada uno responde a su dirección de despertar. Una dirección que no corresponde produce silencio, sin escribir nada.</p>
@@ -563,12 +791,13 @@
         </div>
         <h3>La dirección 9D no se envía</h3>
         <p>En el Lucas 5AS, un módulo de la misma época, 0x9D abre el modo de memoria. El firmware rechaza ese byte. No hay evidencia publicada de que en la 27VT haga lo mismo, y un disparo de ese tipo se acerca al área donde vive el código EDC.</p>
+        <a class="next" href="#placas"><small>Sigue · 04</small><b>Placas<i>→</i></b></a>
       </div>
     </section>
 
     <section class="block" id="placas">
       <div class="wrap prose">
-        <p class="kicker">Placas</p>
+        <p class="kicker">04 · Placas</p>
         <h3>El tiempo lo cuenta el ESP32</h3>
         <div class="sheet">
           <div class="row"><span>ESP32</span><b>Bit-bang de los 5 baudios y de la respuesta a unos 10 kbaud. USB serie a 115200</b></div>
@@ -583,36 +812,155 @@
           <div class="row"><span>UART0</span><b>USB hacia la Pi o la PC. 115200 8N1</b></div>
         </div>
         <p style="margin-top:1rem">Durante el arranque, el GPIO 25 queda en alta impedancia. La resistencia de 100 kΩ entre base y masa mantiene el NPN apagado hasta que el sketch pone la línea en reposo.</p>
+        <a class="next" href="#circuito"><small>Sigue · 05</small><b>Circuito<i>→</i></b></a>
       </div>
     </section>
 
     <section class="block" id="circuito">
       <div class="wrap prose">
-        <p class="kicker">Interfaz</p>
+        <p class="kicker">05 · Interfaz</p>
         <h3>12 V no entran al GPIO</h3>
         <p>El GPIO del ESP32 es de 3,3 V. No tolera 5 V ni 12 V. La K-Line en reposo está a tensión de batería, entre unos 11 V y 14,4 V con el alternador. El pin 7 entra solo por este circuito.</p>
         <p>Transistor 2N2222, BC547 o NPN equivalente. Emisor a masa. El firmware arranca en <code>IFACE NPN</code>: GPIO en alto satura el transistor y pone la K-Line a masa. GPIO en bajo corta el transistor y la línea vuelve a 12 V por el pull-up que ya tienen las ECU.</p>
-        <pre>OBD pin 4  ------------------------- GND ESP32
-OBD pin 7  ----+---- 150 kΩ ---- GPIO26 (RX)
-               |                    |
-               |                  zener 3,3 V
-               |                  cátodo en GPIO26, ánodo a GND
-               |                    |
-               |                  47 kΩ
-               |                    |
-               |                   GND
-               |
-               +---- 1 kΩ ---- colector NPN
+        <figure class="schem-box" style="margin-inline:0">
+          <div class="schem-bar">
+            <div class="views" role="group" aria-label="Camino a resaltar">
+              <button type="button" data-view="" aria-pressed="true">Todo</button>
+              <button type="button" data-view="rx" aria-pressed="false">Lectura · RX</button>
+              <button type="button" data-view="tx" aria-pressed="false">Transmisión · TX</button>
+            </div>
+            <div class="legend" aria-hidden="true">
+              <span><i></i>Lado 12 V</span>
+              <span><i class="l33"></i>Lado 3,3 V</span>
+              <span><i class="lg"></i>Masa común</span>
+            </div>
+          </div>
+          <div class="schem-scroll">
+            <svg class="schem" id="schem" viewBox="0 0 1000 560" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="schem-t">
+              <title id="schem-t">Interfaz NPN entre el pin 7 del OBD y el ESP32. Lectura: 150 kΩ al GPIO 26, con 47 kΩ y zener de 3,3 V en paralelo a masa. Transmisión: GPIO 25 por 1 kΩ a la base del NPN, 100 kΩ de base a masa, colector por 1 kΩ al pin 7, emisor a masa.</title>
 
-GPIO25 ---- 1 kΩ ---- base NPN
-base   ---- 100 kΩ --- GND
-emisor ---------------- GND</pre>
+              <!-- Conector OBD -->
+              <text class="t-cap" x="40" y="74">OBD · J1962</text>
+              <rect class="box" x="40" y="90" width="130" height="400" rx="4"/>
+              <text class="t-lbl" x="60" y="155">7</text><text x="84" y="155">K-Line</text>
+              <text class="t-lbl" x="60" y="405">4</text><text x="84" y="405">Masa</text>
+              <text class="t-lbl" x="60" y="475">16</text><text x="84" y="475">Batería</text>
+
+              <!-- ESP32 -->
+              <text class="t-cap" x="820" y="74">ESP32</text>
+              <rect class="box" x="820" y="90" width="150" height="400" rx="4"/>
+              <text class="t-lbl" x="836" y="146">GPIO 26</text><text x="836" y="164">RX · entrada</text>
+              <text class="t-lbl" x="836" y="371">GPIO 25</text><text x="836" y="389">TX · salida</text>
+              <text class="t-lbl" x="836" y="444">GND</text>
+              <path class="wg" d="M895 490 V520"/>
+              <text x="895" y="545" text-anchor="middle">USB 115200 → Pi Zero W</text>
+
+              <!-- Pin 16: sin conectar -->
+              <path class="wg" d="M170 470 H198" stroke-dasharray="3 3"/>
+              <path class="wg" d="M196 464 L208 476 M208 464 L196 476"/>
+              <text x="216" y="475">sin conectar</text>
+
+              <!-- Masas del conector y del ESP32 -->
+              <g class="p" data-part="gnd rx tx">
+                <path class="wg" d="M170 400 H225 V420 M213 420 H237 M217 426 H233 M221 432 H229"/>
+                <path class="wg" d="M820 440 H780 V455 M768 455 H792 M772 461 H788 M776 467 H784"/>
+              </g>
+
+              <!-- K-Line -->
+              <g class="p" data-part="kl rx tx">
+                <path class="w12 wire" d="M170 150 H300"/>
+                <text class="t-mono" x="180" y="138">0–14,4 V</text>
+                <circle class="dot" cx="170" cy="150" r="4"/>
+                <circle class="dot" cx="300" cy="150" r="4"/>
+              </g>
+
+              <!-- Lectura -->
+              <g class="p" data-part="rx">
+                <path class="w12 wire" d="M300 150 H360"/>
+                <path class="w33 wire" d="M440 150 H820"/>
+                <path class="w33 wire" d="M600 150 V190 M540 190 H660"/>
+                <circle class="dot" cx="600" cy="150" r="3.5"/>
+                <circle class="dot" cx="600" cy="190" r="3.5"/>
+                <circle class="dot" cx="820" cy="150" r="3.5"/>
+                <text class="t-mono" x="740" y="138" text-anchor="middle">≤ 3,3 V</text>
+              </g>
+              <g class="p" data-part="rx div">
+                <rect class="comp" x="360" y="140" width="80" height="20"/>
+                <text x="400" y="128" text-anchor="middle">150 kΩ</text>
+                <path class="w33" d="M540 190 V215 M540 285 V305 M528 305 H552 M532 311 H548 M536 317 H544"/>
+                <rect class="comp33" x="530" y="215" width="20" height="70"/>
+                <text x="520" y="255" text-anchor="end">47 kΩ</text>
+              </g>
+              <g class="p" data-part="rx z">
+                <path class="w33" d="M660 190 V237 M660 265 V305 M648 305 H672 M652 311 H668 M656 317 H664"/>
+                <polygon class="comp33" points="648,265 672,265 660,237"/>
+                <path class="w33" d="M644 243 L648 237 H672 L676 231"/>
+                <text x="686" y="250">Zener 3,3 V</text>
+                <text x="686" y="267" style="font-size:11px">cátodo al GPIO 26</text>
+              </g>
+
+              <!-- Transmisión -->
+              <g class="p" data-part="tx rc">
+                <path class="w12 wire" d="M300 150 V200 M300 270 V345"/>
+                <rect class="comp" x="290" y="200" width="20" height="70"/>
+                <text x="280" y="240" text-anchor="end">1 kΩ</text>
+              </g>
+              <g class="p" data-part="tx npn">
+                <circle class="box" cx="320" cy="375" r="30"/>
+                <path class="w12" d="M332 355 V395" stroke-width="2.5"/>
+                <path class="w12" d="M332 363 L300 345"/>
+                <path class="w12" d="M332 387 L300 405 V440"/>
+                <polygon class="dot" points="304,403 314.6,401.6 310.7,394.6"/>
+                <path class="wg" d="M288 440 H312 M292 446 H308 M296 452 H304"/>
+                <text class="t-lbl" x="350" y="330">NPN</text>
+                <text x="350" y="347" style="font-size:11px">2N2222 · BC547</text>
+              </g>
+              <g class="p" data-part="tx">
+                <path class="w33 wire" d="M820 375 H550"/>
+                <path class="w33 wire" d="M470 375 H332"/>
+                <circle class="dot" cx="400" cy="375" r="3.5"/>
+                <circle class="dot" cx="820" cy="375" r="3.5"/>
+                <text class="t-mono" x="690" y="364" text-anchor="middle">0 / 3,3 V</text>
+              </g>
+              <g class="p" data-part="tx rb">
+                <rect class="comp33" x="470" y="365" width="80" height="20"/>
+                <text x="510" y="355" text-anchor="middle">1 kΩ</text>
+              </g>
+              <g class="p" data-part="tx r100">
+                <path class="w33" d="M400 375 V395 M400 450 V462 M388 462 H412 M392 468 H408 M396 474 H404"/>
+                <rect class="comp33" x="390" y="395" width="20" height="55"/>
+                <text x="420" y="427">100 kΩ</text>
+              </g>
+            </svg>
+          </div>
+          <figcaption class="schem-cap" id="schem-cap" aria-live="polite">Del pin 7 salen dos caminos. Arriba, el divisor que deja leer la línea. Abajo, el transistor que la baja a masa.</figcaption>
+        </figure>
+        <details class="ascii">
+          <summary>Versión en texto</summary>
+          <pre>OBD pin 4  ----------------------------------- GND ESP32
+OBD pin 7  --+-- 150 kΩ --+------------------- GPIO26 (RX)
+             |            |
+             |            +---------+
+             |            |         |
+             |          47 kΩ    zener 3,3 V
+             |            |      (cátodo arriba)
+             |           GND       GND
+             |
+             +-- 1 kΩ -- colector NPN
+
+GPIO25 --- 1 kΩ ---+--- base NPN
+                   |
+                 100 kΩ
+                   |
+                  GND
+emisor NPN ------------ GND</pre>
+        </details>
         <div class="sheet">
-          <div class="row"><span>1 kΩ de base</span><b>Limita la corriente de base. Con 3,3 V y Vbe ≈ 0,7 V, Ib ≈ 2,6 mA</b></div>
-          <div class="row"><span>100 kΩ</span><b>Apaga el NPN mientras el ESP32 arranca. Evita clavar la K-Line al conectar el USB</b></div>
-          <div class="row"><span>1 kΩ de colector</span><b>Limita la corriente al dominar la línea. Protege el transistor y los drivers de las ECU</b></div>
-          <div class="row"><span>150 kΩ + 47 kΩ</span><b>Divisor de lectura. A 14,4 V, sin zener, el nodo queda cerca de 3,4 V</b></div>
-          <div class="row"><span>Zener 3,3 V</span><b>Techo del GPIO 26. Con 14,4 V circulan unos 70 µA por los 150 kΩ</b></div>
+          <div class="row" tabindex="0" data-part="rb"><span>1 kΩ de base</span><b>Limita la corriente de base. Con 3,3 V y Vbe ≈ 0,7 V, Ib ≈ 2,6 mA</b></div>
+          <div class="row" tabindex="0" data-part="r100"><span>100 kΩ</span><b>Apaga el NPN mientras el ESP32 arranca. Evita clavar la K-Line al conectar el USB</b></div>
+          <div class="row" tabindex="0" data-part="rc"><span>1 kΩ de colector</span><b>Limita la corriente al dominar la línea. Protege el transistor y los drivers de las ECU</b></div>
+          <div class="row" tabindex="0" data-part="div"><span>150 kΩ + 47 kΩ</span><b>Divisor de lectura. A 14,4 V, sin zener, el nodo queda cerca de 3,4 V</b></div>
+          <div class="row" tabindex="0" data-part="z"><span>Zener 3,3 V</span><b>Techo del GPIO 26. Con 14,4 V circulan unos 70 µA por los 150 kΩ</b></div>
         </div>
         <p style="margin-top:1rem">Sin zener, 14 V en ese divisor se acerca al máximo del ESP32. El zener forma parte del circuito. El ESP32 se alimenta por USB, desde la Pi o un power bank. El pin 16 no se conecta a 5 V, a 3,3 V ni a un GPIO. La masa es común: pin 4, GND del ESP32 y GND de la Pi.</p>
         <h3>L9637, si aparece el integrado</h3>
@@ -647,12 +995,13 @@ emisor ---------------- GND</pre>
           <span>7 — K-Line, única señal</span>
           <span>16 — batería, esquina inferior derecha, sin usar</span>
         </div>
+        <a class="next" href="#firmware"><small>Sigue · 06</small><b>Firmware<i>→</i></b></a>
       </div>
     </section>
 
     <section class="block" id="firmware">
       <div class="wrap prose">
-        <p class="kicker">Firmware</p>
+        <p class="kicker">06 · Firmware</p>
         <h3>115200 en el monitor</h3>
         <p>El sketch se carga con el IDE de Arduino, placa ESP32 Dev Module. No usa WiFi ni Bluetooth: el bit-bang no comparte el tiempo con la radio. Se flashea desde la PC. La Pi Zero no es un entorno cómodo para compilar el core de ESP32.</p>
         <div class="sheet">
@@ -722,24 +1071,26 @@ SESION_OK</pre>
             <p>E3 es el complemento de 1C. Los keywords 83 76 son los del Lucas 5AS en modo normal. Si la 27VT usa otros, el log los muestra igual, y esos son los que valen. Los números de este recuadro son ilustrativos.</p>
           </article>
         </div>
+        <a class="next" href="#registro"><small>Sigue · 07</small><b>Registro<i>→</i></b></a>
       </div>
     </section>
 
     <section class="block" id="registro">
       <div class="wrap prose">
-        <p class="kicker">Registro</p>
+        <p class="kicker">07 · Registro</p>
         <h3>La Pi guarda cada línea</h3>
         <pre>sudo apt install python3-serial
 sudo usermod -a -G dialout $USER
 python3 kline_log.py /dev/ttyUSB0</pre>
         <p style="margin-top:1rem">El grupo dialout aplica después de volver a entrar a la sesión. Si el puente USB aparece como otro dispositivo: <code>python3 kline_log.py /dev/ttyACM0</code>.</p>
         <p>Cada línea del ESP32 se copia a <code>host/logs/</code> con fecha y hora. Los comandos se escriben en esa terminal y salen hacia el ESP32. Ctrl-C cierra el puerto. En la PC, el monitor serie del IDE a 115200 hace el mismo trabajo.</p>
+        <a class="next" href="#campo"><small>Sigue · 08</small><b>Campo<i>→</i></b></a>
       </div>
     </section>
 
     <section class="block" id="campo">
       <div class="wrap prose">
-        <p class="kicker">En la camioneta</p>
+        <p class="kicker">08 · En la camioneta</p>
         <h3>Contacto en II, motor parado</h3>
         <p>Batería capaz de mantener el contacto. Portón cerrado.</p>
         <ol>
@@ -758,12 +1109,13 @@ python3 kline_log.py /dev/ttyUSB0</pre>
           <li><span>02</span>Las cuatro direcciones en SILENCIO, con PULSO OK y KLINE_EN_REPOSO: la electricidad está bien y ninguna de esas direcciones despertó un módulo. El siguiente dato es probar otra dirección con INIT HH, de a una. Nunca 9D.</li>
           <li><span>03</span>SESION_OK: quedaron fijas la dirección, la velocidad y los keywords de un módulo de este vehículo. Con esos tres números se busca el comando de lectura de Country. La escritura sigue siendo un paso aparte, de un solo campo, sobre una lectura previa de esta misma CCU.</li>
         </ul>
+        <a class="next" href="#limites"><small>Sigue · 09</small><b>Límites<i>→</i></b></a>
       </div>
     </section>
 
     <section class="block" id="limites">
       <div class="wrap prose">
-        <p class="kicker">Límites</p>
+        <p class="kicker">09 · Límites</p>
         <h3>Este lector todavía no escribe</h3>
         <p>No lee ni escribe el bloque de ajustes. Country, Transport mode, Tail window, VIN, EKA y EDC code siguen del lado de TestBook, T4, PScan o SM024 hasta que una sesión real entregue los comandos.</p>
         <p>Cuando esa lectura exista, la escritura de reparación es una sola: cambiar Country de 0 a 57. Si Transport mode está activo en la misma pantalla, apagarlo en esa misma edición. El resto de los campos se copia tal como se leyeron, en especial el EDC code, el VIN 690228, Engine en Diesel, Gearbox en Manual, Drive en LHD, Doors y Tail window instalada.</p>
@@ -778,12 +1130,25 @@ python3 kline_log.py /dev/ttyUSB0</pre>
           <li><span>05</span>Si queda arriba, la calibración cerró. Si la CCU pita cerca de 1 s y el vidrio baja solo, repetir desde el primer paso.</li>
         </ol>
         <p style="margin-top:1rem">En el mapa del SM024, el botón del portón es Door open request. Fuera de Transit Mode, la luneta pasa de STATIONARY a GOTO COS: baja lo justo para zafar el burlete y después suelta el pestillo. Durante la calibración los estados son CAL DOWN, CAL UP y CAL STALL.</p>
+        <a class="next" href="#archivos"><small>Sigue · 10</small><b>Archivos<i>→</i></b></a>
+      </div>
+    </section>
+
+    <section class="block" id="archivos">
+      <div class="wrap prose">
+        <p class="kicker">10 · Archivos</p>
+        <h3>Qué hay en el repositorio</h3>
+        <div class="sheet">
+          <div class="row"><span>Firmware</span><b><code>firmware/esp32_kline/esp32_kline.ino</code></b></div>
+          <div class="row"><span>Registro</span><b><code>host/kline_log.py</code></b></div>
+          <div class="row"><span>Logs</span><b><code>host/logs/kline-AAAAMMDD-HHMMSS.log</code></b></div>
+        </div>
       </div>
     </section>
 
     <section class="block" id="referencias">
       <div class="wrap prose">
-        <p class="kicker">Referencias</p>
+        <p class="kicker">11 · Referencias</p>
         <h3>De dónde sale cada cifra</h3>
         <ul>
           <li><span>01</span>Manual de taller Freelander: Transit Mode y calibración de la luneta.</li>
@@ -799,5 +1164,95 @@ python3 kline_log.py /dev/ttyUSB0</pre>
     <span>Roverta · Freelander 1 MY99</span>
     <span>Lector de solo lectura</span>
   </footer>
+
+  <script>
+    (function () {
+      var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var header = document.querySelector('header');
+      var bar = document.querySelector('.progress');
+
+      // Progreso de lectura y borde del header
+      var ticking = false;
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          var max = document.documentElement.scrollHeight - innerHeight;
+          bar.style.transform = 'scaleX(' + (max > 0 ? scrollY / max : 0) + ')';
+          header.classList.toggle('scrolled', scrollY > 8);
+          ticking = false;
+        });
+      }
+      addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      if (!('IntersectionObserver' in window)) {
+        document.documentElement.classList.remove('js');
+        return;
+      }
+
+      // Capítulo activo en el nav
+      var links = {};
+      document.querySelectorAll('nav a').forEach(function (a) { links[a.hash.slice(1)] = a; });
+      var spy = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          Object.keys(links).forEach(function (k) { links[k].classList.remove('active'); });
+          if (links[e.target.id]) links[e.target.id].classList.add('active');
+        });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+      document.querySelectorAll('section.block[id]').forEach(function (s) { spy.observe(s); });
+
+      // Aparición al hacer scroll
+      var items = document.querySelectorAll('.triad article, .figure, .lead, .chain-wrap, section.block .prose > *');
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { rootMargin: '0px 0px -8% 0px' });
+      items.forEach(function (el, i) {
+        el.classList.add('rv');
+        if (el.matches('.triad article, .figure')) el.style.transitionDelay = (i % 3) * 0.12 + 's';
+        io.observe(el);
+      });
+
+      // Pulso recorriendo el trazo del hero, cuando termina de dibujarse
+      var comet = document.getElementById('cometa');
+      if (!calm && comet && comet.beginElement) setTimeout(function () { comet.beginElement(); }, 3000);
+
+      // Esquemático: vistas RX / TX y resaltado desde la tabla
+      var svg = document.getElementById('schem');
+      var cap = document.getElementById('schem-cap');
+      var buttons = document.querySelectorAll('.views button');
+      var captions = {
+        '': cap.textContent,
+        rx: 'Lectura. El pin 7 pasa por 150 kΩ y llega al GPIO 26. El 47 kΩ y el zener, en paralelo a masa, dejan el nodo en 3,3 V como máximo.',
+        tx: 'Transmisión. El GPIO 25 en alto satura el NPN por el 1 kΩ de base, y el colector baja la K-Line a masa a través del otro 1 kΩ. El 100 kΩ lo mantiene apagado mientras el ESP32 arranca.'
+      };
+      var view = '';
+      function show(part) {
+        svg.classList.toggle('focusing', !!part);
+        svg.querySelectorAll('.p').forEach(function (g) {
+          g.classList.toggle('on', !!part && (' ' + g.dataset.part + ' ').indexOf(' ' + part + ' ') > -1);
+        });
+      }
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () {
+          view = b.dataset.view;
+          buttons.forEach(function (o) { o.setAttribute('aria-pressed', String(o === b)); });
+          cap.textContent = captions[view];
+          show(view);
+        });
+      });
+      document.querySelectorAll('.row[data-part]').forEach(function (r) {
+        function on() { show(r.dataset.part); }
+        function off() { show(view); }
+        r.addEventListener('mouseenter', on);
+        r.addEventListener('focus', on);
+        r.addEventListener('mouseleave', off);
+        r.addEventListener('blur', off);
+      });
+    })();
+  </script>
 </body>
 </html>
