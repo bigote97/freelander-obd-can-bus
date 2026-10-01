@@ -96,7 +96,21 @@
     }
 
     .hero {
+      position: relative;
+      isolation: isolate;
       padding: clamp(2.5rem, 7vw, 5.5rem) 0 0;
+    }
+    /* Silueta de la Freelander en trazo fino, detrás del título y la K-Line. */
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: url("img/freelander-1.svg") center 55% / contain no-repeat;
+      opacity: 0.11;
+      -webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 68%, transparent);
+      mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 68%, transparent);
+      pointer-events: none;
     }
 
     .hero-top {
